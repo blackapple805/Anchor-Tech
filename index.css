@@ -1,11 +1,11 @@
 /* =========================================================
    Anchor Tech Solutions — Editorial multi-page (DARK)
-   Deep navy base · coastal teal accent · Fraunces + Inter
+   Deep navy base · bright gold accent · Fraunces + Inter
    Redesign: tokens preserved, primitives extended with modifiers.
    Signature element: "The Index Mark" (numbered editorial lockup).
-   Fonts are loaded via <link> in index.html <head> (parallel,
-   early) instead of @import here, to avoid a first-load font flash.
    ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
   --paper:      #0B1B30;
@@ -17,16 +17,16 @@
   --muted-2:    #6E7F95;
   --line:       #21364F;
   --line-2:     #2C435F;
-  --accent:     #36C2DA;
-  --accent-deep:#5FD6E8;
-  --accent-soft:#103142;
+  --accent:     #E7BB52;
+  --accent-deep:#F0C96B;
+  --accent-soft:#1C2F49;
   --dark:       #071426;
   --dark-2:     #0A1B30;
   --cream-on-dark: #ECF1F8;
 
   /* compatibility aliases used by some page markup */
-  --gold-700:   #36C2DA;
-  --gold-soft:  #103142;
+  --gold-700:   #E7BB52;
+  --gold-soft:  #1C2F49;
   --steel:      #7FA8D6;
   --steel-soft: #14263E;
 
@@ -188,7 +188,6 @@ em, .it { font-style: italic; }
   font-family: var(--grotesk); font-size: 14.5px; font-weight: 500; color: var(--ink-2);
   position: relative; padding: 4px 0; transition: color .25s;
 }
-
 .nav-links a:not(.btn)::after { content: ""; position: absolute; left: 0; bottom: -2px; width: 0; height: 1px; background: var(--accent); transition: width .3s var(--ease); }
 .nav-links a:not(.btn):hover { color: var(--accent); }
 .nav-links a:not(.btn).active { color: var(--accent); }
@@ -626,38 +625,3 @@ em, .it { font-style: italic; }
   .cards { grid-template-columns: 1fr; gap: 14px; }
   .card--link { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 26px 22px 24px; }
 }
-
-/* ── Header: progressive collapse so the nav never squishes ── */
-
-/* Fluid spacing — gaps tighten smoothly instead of cramming */
-.site-header .nav { gap: clamp(16px, 2.2vw, 28px); flex-wrap: nowrap; min-width: 0; }
-.nav-links        { gap: clamp(18px, 2.35vw, 30px); }
-.nav-cta          { gap: clamp(10px, 1.4vw, 18px); flex: none; }
-.brand            { min-width: 0; }
-
-/* Small laptops / large tablets: ease the type down a touch */
-@media (max-width: 1120px) {
-  .nav-links a:not(.btn) { font-size: 14px; }
-  .nav-phone             { font-size: 14px; }
-}
-
-/* Before it gets tight, drop the phone number (the button stays) */
-@media (max-width: 960px) {
-  .nav-cta .nav-phone { display: none; }
-}
-.is-resizing .nav-links { transition: none !important; }
-/* =========================================================
-   CONSISTENCY PASS — fully-rounded ("pill") buttons
-   Appended last so it overrides the earlier primitives.
-   Every button on the site shares one rounded language,
-   matching the existing pill-shaped .chip elements.
-   ========================================================= */
-
-/* Primary CTA + every modifier (--lg, --ghost, --light, --block) */
-.btn { border-radius: 999px; }
-/* Keep the focus ring hugging the pill instead of the global 3px */
-.btn:focus-visible { border-radius: 999px; }
-
-/* Icon buttons rounded to match the pill language */
-.nav-toggle { border-radius: 999px; }
-.img-slot .clear { border-radius: 999px; }

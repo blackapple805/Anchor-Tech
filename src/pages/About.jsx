@@ -85,7 +85,7 @@ function About() {
             <div className="chips">{aboutAreas.map((a) => (<span className="chip" key={a}><Pin />{a}</span>))}</div>
           </Reveal>
           <Reveal>
-            <ImageSlot id="about-area" className="split-slot split-slot--tall" placeholder="Drop a local photo — coastline, your shop, or a map" src="https://images.unsplash.com/photo-1580106815433-a5b1d1d53d85?w=1000&q=80&auto=format&fit=crop" />
+            <ImageSlot id="about-area" className="split-slot split-slot--tall" placeholder="Drop a local photo — coastline, your shop, or a map" src="https://images.unsplash.com/photo-1707159960677-2790b1ca0b43?w=1000&q=80&auto=format&fit=crop" />
           </Reveal>
         </div>
       </section>

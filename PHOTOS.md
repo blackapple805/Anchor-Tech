@@ -18,10 +18,14 @@ no attribution required). If you'd rather self-host, open the photo page, click
 
 | Slot | Where | Photo | Page to download / view |
 |------|-------|-------|-------------------------|
-| Home hero | `src/pages/Home.jsx` (`home-hero`) | Blue network cables | https://unsplash.com/photos/cable-network-M5tzZtFCOfs |
-| Home "why us" | `src/pages/Home.jsx` (`home-why`) | Tech working on a laptop | https://unsplash.com/photos/woman-in-black-top-using-surface-laptop-glRqyWJgUeY |
+| Home hero | `src/pages/Home.jsx` (`home-hero`) | Two colleagues at a laptop (warm, human) | https://unsplash.com/photos/two-men-looking-at-a-laptop-together-MSTL7-5avQo |
+| Home "why us" | `src/pages/Home.jsx` (`home-why`) | Team working together | https://unsplash.com/photos/group-of-people-using-laptop-computer-QckxruozjRg |
 | About story | `src/pages/About.jsx` (`about-story`) | Team meeting | https://unsplash.com/photos/group-of-people-having-a-meeting-VBLHICVh-lI |
-| About service area | `src/pages/About.jsx` (`about-area`) | Server hallway | https://unsplash.com/photos/a-long-hallway-with-glass-doors-leading-to-another-room-s0XabTAKvak |
+| About service area | `src/pages/About.jsx` (`about-area`) | Ventura Pier (local) | https://unsplash.com/photos/an-aerial-view-of-a-beach-and-a-pier-gvw45dUTPmE |
+
+> Updated to people-focused, on-theme photos. The hero and "why us" slots now
+> show real people working together rather than equipment; the service-area
+> slot shows Ventura Pier so the local angle reads instantly.
 
 ## More on-theme options (swap in any time)
 

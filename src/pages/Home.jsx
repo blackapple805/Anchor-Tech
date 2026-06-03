@@ -54,7 +54,7 @@ export default function Home() {
             </Reveal>
           </div>
           <Reveal className="hero-visual" delay={120}>
-            <ImageSlot id="home-hero" className="hero-slot" placeholder="Drop a hero photo — your team, a job site, or local storefront" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1000&q=80&auto=format&fit=crop" />
+            <ImageSlot id="home-hero" className="hero-slot" placeholder="Drop a hero photo — your team, a job site, or local storefront" src="https://images.unsplash.com/photo-1758519288814-bb9f97e4df95?w=1400&q=80&auto=format&fit=crop" />
             <div className="hero-badge hero-badge--tl">
               <div><b>2-hr</b><small>avg. response time</small></div>
             </div>
@@ -107,7 +107,7 @@ export default function Home() {
       <section className="section mist">
         <div className="wrap split">
           <Reveal>
-            <ImageSlot id="home-why" className="split-slot" placeholder="Drop a photo — on-site work, a happy client, or your shop" src="https://images.unsplash.com/photo-1573164713988-8665fc963095?w=1000&q=80&auto=format&fit=crop" />
+            <ImageSlot id="home-why" className="split-slot" placeholder="Drop a photo — on-site work, a happy client, or your shop" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&q=80&auto=format&fit=crop" />
           </Reveal>
           <Reveal delay={100}>
             <p className="eyebrow">Why local businesses choose us</p>
