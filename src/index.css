@@ -17,16 +17,16 @@
   --muted-2:    #6E7F95;
   --line:       #21364F;
   --line-2:     #2C435F;
-  --accent:     #E7BB52;
-  --accent-deep:#F0C96B;
-  --accent-soft:#1C2F49;
+  --accent:     #36C2DA;
+  --accent-deep:#5FD6E8;
+  --accent-soft:#103142;
   --dark:       #071426;
   --dark-2:     #0A1B30;
   --cream-on-dark: #ECF1F8;
 
   /* compatibility aliases used by some page markup */
-  --gold-700:   #E7BB52;
-  --gold-soft:  #1C2F49;
+  --gold-700:   #36C2DA;
+  --gold-soft:  #103142;
   --steel:      #7FA8D6;
   --steel-soft: #14263E;
 
@@ -560,6 +560,58 @@ em, .it { font-style: italic; }
   .cta-band .inner { flex-direction: column; align-items: flex-start; }
   .cta-actions { width: 100%; }
   .proof-sep { display: none; }
+
+  /* ---- Centered mobile layout: hero, section intros & all CTA buttons ----
+     Desktop is left untouched; this only applies at <=760px. Scannable lists
+     (FAQs, checklists, service rows, contact form) stay left for readability. */
+
+  /* Home hero */
+  .hero-copy { text-align: center; }
+  .hero-copy .eyebrow { justify-content: center; }
+  .hero-copy .lead { margin-left: auto; margin-right: auto; }
+  .hero-actions { justify-content: center; }
+  .trust-row { justify-content: center; }
+
+  /* Interior page heroes */
+  .page-hero .wrap { text-align: center; }
+  .page-hero h1 { margin-left: auto; margin-right: auto; }
+  .page-hero > .wrap > p { margin-left: auto; margin-right: auto; }
+  .crumbs { justify-content: center; }
+
+  /* Section headings + the rail line beside them */
+  .section-head { text-align: center; margin-left: auto; margin-right: auto; }
+  .section-head .eyebrow { justify-content: center; }
+  .section-head .lead { margin-left: auto; margin-right: auto; }
+  .head-rail, .head-rail .rail-line { text-align: center; }
+  .head-rail .rail-line { margin-left: auto; margin-right: auto; }
+  .head-rail .rail-meta { justify-content: center; }
+
+  /* Process steps + feature blurbs */
+  .step { text-align: center; }
+  .step p { margin-left: auto; margin-right: auto; }
+  .feature { text-align: center; }
+  .feature p { margin-left: auto; margin-right: auto; }
+
+  /* Marketing split sections: center copy + buttons,
+     but keep genuine lists left-aligned so they stay readable */
+  .split { text-align: center; }
+  .split .eyebrow { justify-content: center; }
+  .split .lead { margin-left: auto; margin-right: auto; }
+  .split .check-list,
+  .split .svc-includes,
+  .split .faq-list { text-align: left; }
+
+  /* Service-area chips */
+  .chips { justify-content: center; }
+
+  /* Stats */
+  .stat { text-align: center; }
+
+  /* CTA band: center its copy and buttons */
+  .cta-band .inner { align-items: center; text-align: center; }
+  .cta-band .eyebrow { justify-content: center; }
+  .cta-band h2,
+  .cta-band p { margin-left: auto; margin-right: auto; }
 }
 
 @media (max-width: 540px) {
