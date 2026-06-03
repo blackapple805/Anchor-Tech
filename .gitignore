@@ -1,0 +1,6 @@
+node_modules
+dist
+*.local
+.DS_Store
+# local TLS certs (regenerate with mkcert if you want HTTPS dev)
+*.pem
