@@ -1,7 +1,7 @@
 # Anchor Tech Solutions — Editorial site (React)
 
 The editorial single-page design, rebuilt in React (Vite) with a
-**navy + bronze/gold** palette. Newsreader serif + Hanken Grotesk, grain
+**navy + bronze** palette. Newsreader serif + Hanken Grotesk, grain
 overlay, scroll reveals, smooth-scroll nav, mobile menu, and a working
 contact form — all carried over from the original and recolored.
 
