@@ -2,7 +2,9 @@ import { Link } from 'react-router-dom';
 import Reveal from '../components/Reveal.jsx';
 import ImageSlot from '../components/ImageSlot.jsx';
 import CtaBand from '../components/CtaBand.jsx';
-import { Arrow, Star } from '../components/icons.jsx';
+import Marquee from '../components/Marquee.jsx';
+import { Eyebrow } from '../components/SectionHead.jsx';
+import { Arrow, Star, Pin } from '../components/icons.jsx';
 
 const services = [
   { n: '01', to: 'network-setup', t: 'Computer & Network Setup', d: 'New workstations, servers and wired networks installed, configured and ready to go on day one.' },
@@ -31,6 +33,21 @@ const testimonials = [
   { av: 'MR', name: 'Maria Reyes', role: 'Owner, Reyes Family Kitchen — Oxnard', q: 'Our Wi-Fi used to drop every lunch rush. Anchor mapped the whole restaurant, swapped a few things out, and it\u2019s been rock solid for a year. They actually explained what was wrong.' },
   { av: 'DT', name: 'David Tran', role: 'Manager, Coastline Auto Care — Ventura', q: 'They set up our cameras and back-office network for the new location and had us open on schedule. When a POS terminal acted up, someone was here within the hour. Worth every penny.' },
   { av: 'SK', name: 'Dr. Susan Kim', role: 'Camarillo Family Dental', q: 'As a small dental office, losing patient records would be a nightmare. Anchor set up automatic backups and walks us through a test restore every quarter. I finally sleep at night.' },
+];
+
+const marqueeItems = [
+  'Network Setup',
+  { text: 'Ventura County', muted: true },
+  'Wi-Fi Installation',
+  { text: 'Same-day visits', muted: true },
+  'Security Cameras',
+  { text: 'No jargon', muted: true },
+  'POS Systems',
+  { text: '2-hr response', muted: true },
+  'Data Backup & Recovery',
+  { text: 'Locally owned', muted: true },
+  'Ongoing Tech Support',
+  { text: '120+ businesses', muted: true },
 ];
 
 export default function Home() {
@@ -82,10 +99,18 @@ export default function Home() {
       {/* SERVICES PREVIEW */}
       <section className="section">
         <div className="wrap">
-          <Reveal className="section-head center">
-            <p className="eyebrow">What we do</p>
-            <h2 className="title">Everything your business needs to stay connected</h2>
-            <p className="lead">One local team for setup, security and support — so you’re not juggling five different vendors and a stack of help-desk tickets.</p>
+          <Reveal className="head-split">
+            <div className="section-head">
+              <Eyebrow ix="01">What we do</Eyebrow>
+              <h2 className="title">Everything your business needs to stay connected</h2>
+            </div>
+            <div className="head-rail">
+              <p className="rail-line">One local team for setup, security and support — so you’re not juggling five vendors and a stack of help-desk tickets.</p>
+              <div className="rail-meta">
+                <b>6</b>
+                <span><i>core services</i><i>one accountable team</i></span>
+              </div>
+            </div>
           </Reveal>
           <div className="cards" style={{ marginTop: 52 }}>
             {services.map(({ n, to, t, d }) => (
@@ -106,16 +131,20 @@ export default function Home() {
       {/* WHY US */}
       <section className="section mist">
         <div className="wrap split">
-          <Reveal>
+          <Reveal className="split-figure">
             <ImageSlot id="home-why" className="split-slot" placeholder="Drop a photo — on-site work, a happy client, or your shop" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&q=80&auto=format&fit=crop" />
+            <div className="split-badge">
+              <span className="sb-pin"><Pin /></span>
+              <div><b>Ventura County</b><small>On-site, same- or next-day</small></div>
+            </div>
           </Reveal>
           <Reveal delay={100}>
-            <p className="eyebrow">Why local businesses choose us</p>
+            <Eyebrow ix="02">Why local businesses choose us</Eyebrow>
             <h2 className="title">A real local partner, not a faraway help desk</h2>
             <p className="lead">We live and work in Ventura County. When something breaks, you reach a neighbor who can drive over — not a call center reading from a script three time zones away.</p>
-            <ul className="check-list">
-              {whyPoints.map(([b, d]) => (
-                <li key={b}><div><b>{b}</b><span className="d">{d}</span></div></li>
+            <ul className="check-list check-list--ix">
+              {whyPoints.map(([b, d], i) => (
+                <li key={b}><span className="cl-ix">{String(i + 1).padStart(2, '0')}</span><div><b>{b}</b><span className="d">{d}</span></div></li>
               ))}
             </ul>
             <div style={{ marginTop: 32 }}><Link className="btn" to="/about">More about our team <Arrow /></Link></div>
@@ -126,9 +155,14 @@ export default function Home() {
       {/* FEATURES */}
       <section className="section">
         <div className="wrap">
-          <Reveal className="section-head center">
-            <p className="eyebrow">The Anchor difference</p>
-            <h2 className="title">Built around how small businesses actually run</h2>
+          <Reveal className="head-split">
+            <div className="section-head">
+              <Eyebrow ix="03">The Anchor difference</Eyebrow>
+              <h2 className="title">Built around how small businesses actually run</h2>
+            </div>
+            <div className="head-rail">
+              <p className="rail-line">Four habits that decide whether technology helps your day or quietly hijacks it.</p>
+            </div>
           </Reveal>
           <div className="feature-grid" style={{ marginTop: 52 }}>
             {features.map(({ t, d }, i) => (
@@ -144,9 +178,18 @@ export default function Home() {
       {/* TESTIMONIALS */}
       <section className="section mist">
         <div className="wrap">
-          <Reveal className="section-head center">
-            <p className="eyebrow">What our clients say</p>
-            <h2 className="title">Trusted by the businesses down the street</h2>
+          <Reveal className="head-split">
+            <div className="section-head">
+              <Eyebrow ix="04">What our clients say</Eyebrow>
+              <h2 className="title">Trusted by the businesses down the street</h2>
+            </div>
+            <div className="head-rail">
+              <p className="rail-line">Real Ventura County owners, in their own words.</p>
+              <div className="rail-meta">
+                <b>4.9★</b>
+                <span><i>average across</i><i>120+ businesses</i></span>
+              </div>
+            </div>
           </Reveal>
           <div className="tcards" style={{ marginTop: 52 }}>
             {testimonials.map(({ av, name, role, q }, i) => (
@@ -162,7 +205,12 @@ export default function Home() {
         </div>
       </section>
 
+      {/* REVOLVING RIBBON */}
+      <Marquee items={marqueeItems} speed={42} ariaLabel="What we do across Ventura County" />
+
       <CtaBand
+        ix="05"
+        eyebrow="Get started"
         heading="Let’s get your tech working for you."
         sub="Book a free, no-pressure consultation. We’ll learn your business, walk your space, and send a clear plan and quote — no obligation."
       />

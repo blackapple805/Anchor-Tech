@@ -5,6 +5,7 @@ import { PHONE, PHONE_DISPLAY } from '../data/services.js';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -19,6 +20,14 @@ export default function Header() {
     };
   }, [open]);
 
+  // Trigger the one-time entry animation after mount, on the next frame so the
+  // initial (pre-animation) state paints first. This runs once and never again,
+  // so a resize can't replay the drop-in.
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setLoaded(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
   useEffect(() => {
     let resizeTimer;
     const onResize = () => {
@@ -32,11 +41,12 @@ export default function Header() {
     return () => {
       window.removeEventListener('resize', onResize);
       clearTimeout(resizeTimer);
+      document.body.classList.remove('is-resizing');
     };
   }, []);
 
   return (
-    <header className="site-header">
+    <header className={`site-header ${loaded ? 'is-loaded' : ''}`}>
       <div className="wrap nav">
         <NavLink
           className="brand"

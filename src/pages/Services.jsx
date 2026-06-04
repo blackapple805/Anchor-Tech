@@ -6,25 +6,48 @@ import { Chevron, Arrow } from '../components/icons.jsx';
 import { SVCS } from '../data/services.js';
 
 /* ---------------- Services index ---------------- */
+const heroFacts = [
+  ['01', '8 core services', 'Setup, security, backups and day-to-day support'],
+  ['02', '2-hour response', 'Average time to reach a real person who knows you'],
+  ['03', 'Flat-rate quotes', 'Approved up front — before any work begins'],
+  ['04', 'No long contracts', 'You stay because it works, not because you’re locked in'],
+];
 const processSteps = [
   ['1', 'Free consultation', 'We learn your business, walk your space, and listen to what’s actually slowing you down — no obligation, no jargon.'],
   ['2', 'Clear plan & quote', 'You get a plain-English plan with flat, up-front pricing. You approve it before we lift a finger.'],
   ['3', 'Setup & ongoing care', 'We install everything cleanly, show your team the ropes, and stay on call whenever you need us.'],
 ];
 
-function Services() {
+export default function Services() {
   return (
     <>
-      <section className="page-hero">
+      <section className="page-hero page-hero--split">
         <div className="wrap">
-          <span className="hero-figure" aria-hidden="true">08</span>
-          <Reveal className="crumbs"><Link to="/">Home</Link><Chevron /><span>Services</span></Reveal>
-          <Reveal as="h1" delay={60}>One local team for everything tech.</Reveal>
-          <Reveal as="p" delay={120}>Whether you’re opening a new location or finally fixing the Wi-Fi that’s been driving you crazy, we handle the setup, the security and the day-to-day support — so technology stops being a headache and starts being an advantage.</Reveal>
+          <div className="hero-lead">
+            <Reveal className="crumbs"><Link to="/">Home</Link><Chevron /><span>Services</span></Reveal>
+            <Reveal as="h1" delay={60}>One local team for everything tech.</Reveal>
+            <Reveal as="p" delay={120}>Whether you’re opening a new location or finally fixing the Wi-Fi that’s been driving you crazy, we handle the setup, the security and the day-to-day support — so technology stops being a headache and starts being an advantage.</Reveal>
+            <Reveal className="hero-actions" delay={180}>
+              <Link className="btn" to="/contact">Book a Free Consultation <Arrow /></Link>
+              <a className="btn btn--ghost" href="#services-list">Jump to the list</a>
+            </Reveal>
+          </div>
+          <Reveal className="hero-aside" delay={140}>
+            <span className="hero-figure" aria-hidden="true">08</span>
+            <div className="hero-rail">
+              <div className="rail-head"><span className="rh-ix">—</span><span className="rh-label">At a glance</span></div>
+              {heroFacts.map(([n, t, d]) => (
+                <div className="hero-fact" key={n}>
+                  <span className="hf-n">{n}</span>
+                  <div><b>{t}</b><span>{d}</span></div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
-      <section className="section">
+      <section className="section" id="services-list">
         <div className="wrap">
           <Reveal className="head-split" style={{ marginBottom: 14 }}>
             <div className="section-head"><Eyebrow ix="01">The full list</Eyebrow><h2 className="title">Eight ways we keep you running</h2></div>
@@ -65,4 +88,3 @@ function Services() {
     </>
   );
 }
-export default Services;

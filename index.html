@@ -1,22 +1,1497 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="color-scheme" content="dark" />
-<style>
-  :root { color-scheme: dark; }
-  html, body { margin: 0; background: #0B1B30; }
-</style>
-<title>Anchor Tech Solutions — Managed IT for Ventura's Small Businesses</title>
-<meta name="description" content="Anchor Tech Solutions sets up and looks after the networks, security and systems that keep Ventura County's small businesses running. Locally owned. Quietly reliable." />
+<title>Anchor Tech Solutions — Preview</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@400;500;600;700&display=swap" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' rx='8' fill='%230B1B30'/%3E%3Cg stroke='%23ECF1F8' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' fill='none'%3E%3Ccircle cx='22' cy='12.5' r='4'/%3E%3Cline x1='22' y1='16.5' x2='22' y2='37'/%3E%3Cpath d='M12 23 H8 a14 14 0 0 0 28 0 h-4'/%3E%3C/g%3E%3C/svg%3E" />
+<style>:root{color-scheme:dark}html,body{margin:0;background:#0B1B30}</style>
+<link rel="stylesheet" href="src/index.css" />
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 </head>
 <body>
 <div id="root"></div>
-<script type="module" src="/src/main.jsx"></script>
+<script type="text/babel" data-presets="react">
+
+const RR = (function(){
+  const { useState, useEffect, useContext, createContext, createElement: h, Children } = React;
+  const ParamsCtx = createContext({});
+  function getPath(){ const hash = window.location.hash || '#/'; return hash.replace(/^#/, '') || '/'; }
+  function useHashPath(){
+    const [p, setP] = useState(getPath());
+    useEffect(()=>{ const on=()=>setP(getPath()); window.addEventListener('hashchange', on); return ()=>window.removeEventListener('hashchange', on); },[]);
+    return p;
+  }
+  function navigate(to){ if(typeof to==='number'){ history.go(to); return; } window.location.hash = '#'+to; window.scrollTo(0,0); }
+  function useNavigate(){ return navigate; }
+  function useLocation(){ return { pathname: useHashPath() }; }
+  function useParams(){ return useContext(ParamsCtx); }
+  const Link = React.forwardRef(function Link({to, className, children, ...rest}, ref){ return h('a', { href:'#'+to, className, ref, ...rest }, children); });
+  const NavLink = React.forwardRef(function NavLink({to, end, className, children, ...rest}, ref){
+    const path = useHashPath();
+    const active = end ? path===to : (path===to || path.startsWith(to.replace(/\/$/,'')+'/'));
+    let cn = typeof className==='function' ? className({isActive:active}) : className;
+    if(active) cn = (cn?cn+' ':'')+'active';
+    return h('a', { href:'#'+to, className:cn, ref, ...rest }, children);
+  });
+  function matchRoute(pattern, path){
+    if(pattern==='*') return null;
+    if(pattern==='/') return path==='/'?{}:null;
+    const pp = pattern.split('/').filter(Boolean);
+    const ap = path.split('/').filter(Boolean);
+    if(pp.length!==ap.length) return null;
+    const params={};
+    for(let i=0;i<pp.length;i++){ if(pp[i][0]===':') params[pp[i].slice(1)]=decodeURIComponent(ap[i]); else if(pp[i]!==ap[i]) return null; }
+    return params;
+  }
+  function Routes({children}){
+    const path = useHashPath();
+    const arr = Children.toArray(children);
+    let star=null;
+    for(const ch of arr){
+      const pat = ch.props.path;
+      if(pat==='*'){ star=ch; continue; }
+      const m = matchRoute(pat, path);
+      if(m){ return h(ParamsCtx.Provider,{value:m}, ch.props.element); }
+    }
+    return star ? h(ParamsCtx.Provider,{value:{}}, star.props.element) : null;
+  }
+  function Route(){ return null; }
+  function HashRouter({children}){ return children; }
+  return { Link, NavLink, Routes, Route, HashRouter, useLocation, useParams, useNavigate };
+})();
+
+
+/* ===== src/components/icons.jsx ===== */
+const M_icons = (function(){
+
+const iconProps = { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' };
+
+function Anchor({ className = '', ...props }) {
+  return (
+    <svg
+      className={className}
+      width="34"
+      height="34"
+      viewBox="0 0 44 44"
+      fill="none"
+      {...props}
+    >
+      <g
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="22" cy="12.5" r="4" />
+        <line x1="22" y1="16.5" x2="22" y2="37" />
+        <path d="M12 23 H8 a14 14 0 0 0 28 0 h-4" />
+      </g>
+    </svg>
+  );
+}
+
+function Phone({ className = '', ...props }) {
+  return (
+    <svg className={className} {...iconProps} {...props}>
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
+    </svg>
+  );
+}
+
+function Menu({ className = '', ...props }) {
+  return (
+    <svg className={className} {...iconProps} {...props}>
+      <line x1="3" y1="7" x2="21" y2="7" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="17" x2="21" y2="17" />
+    </svg>
+  );
+}
+
+function X({ className = '', ...props }) {
+  return (
+    <svg className={className} {...iconProps} {...props}>
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  );
+}
+
+function Chevron({ className = '', ...props }) {
+  return (
+    <svg className={className} {...iconProps} {...props}>
+      <polyline points="9 6 15 12 9 18" />
+    </svg>
+  );
+}
+
+function Arrow({ className = '', ...props }) {
+  return (
+    <svg className={className} {...iconProps} {...props}>
+      <path d="M5 12h14" />
+      <polyline points="13 5 20 12 13 19" />
+    </svg>
+  );
+}
+
+function Check({ className = '', ...props }) {
+  return (
+    <svg className={className} {...iconProps} {...props}>
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  );
+}
+
+function Star({ className = '', ...props }) {
+  return (
+    <svg
+      className={className}
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      stroke="none"
+      aria-hidden="true"
+      {...props}
+    >
+      <polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9" />
+    </svg>
+  );
+}
+
+function Pin({ className = '', ...props }) {
+  return (
+    <svg className={className} {...iconProps} {...props}>
+      <path d="M12 2a5 5 0 0 0-5 5c0 3.75 5 11 5 11s5-7.25 5-11a5 5 0 0 0-5-5z" />
+      <circle cx="12" cy="7" r="2" />
+    </svg>
+  );
+}
+
+return { Anchor, Phone, Menu, X, Chevron, Arrow, Check, Star, Pin };
+})();
+
+/* ===== src/data/services.js ===== */
+const M_data = (function(){
+
+const PHONE = '+18055550142';
+const PHONE_DISPLAY = '(805) 555-0142';
+const EMAIL = 'hello@anchortechsolutions.com';
+
+const services = [
+  {
+    slug: 'network-setup',
+    title: 'Network Setup',
+    short: 'Clean, reliable wired and wireless networks for your whole business.',
+    intro: 'A stable network is the foundation of every system in your business. We design and install wired and wireless infrastructure that keeps your office, retail space, or clinic running smoothly.',
+    includes: [
+      'Network design and documentation',
+      'Wired cabling and switch configuration',
+      'Wi-Fi coverage mapping and tuning',
+      'Segmentation for guest, staff, and devices',
+      'Ongoing reliability checks and support',
+    ],
+    outcomes: [
+      ['Less downtime', 'Fewer dropped connections and faster recovery when issues happen.'],
+      ['Better coverage', 'Wireless signal that actually reaches the places your team and customers use.'],
+      ['Clear ownership', 'One local team responsible for design, install, and support.'],
+    ],
+    signs: [
+      'Wi-Fi drops in the middle of the day',
+      'Slow file transfers or printing problems',
+      'Poor signal in key customer areas',
+      'Outlets, switches, or access points feel guesswork',
+    ],
+    faqs: [
+      ['How long does setup take?', 'Most small businesses are done in one or two visits, depending on cabling and environment.'],
+      ['Will this work with our existing equipment?', 'Yes — we audit what you have first, then recommend whether to reuse, upgrade, or replace.'],
+    ],
+  },
+  {
+    slug: 'wifi-installation',
+    title: 'Wi-Fi Installation',
+    short: 'Designed wireless coverage for staff, customers, and devices in every room.',
+    intro: 'Poor Wi-Fi costs time and revenue. We install and optimize access points so your network behaves predictably, even when multiple devices are connected.',
+    includes: [
+      'Wi-Fi site survey and placement plan',
+      'Access point installation and configuration',
+      'SSID and security setup',
+      'Performance tuning for busy spaces',
+      'Documentation and support handoff',
+    ],
+    outcomes: [
+      ['Reliable connectivity', 'Strong signal across your work and customer areas.'],
+      ['Faster access', 'Reduced buffering, slow cloud apps, and dropped calls.'],
+      ['Secure guests', 'Separated guest access from your internal systems.'],
+    ],
+    signs: [
+      'Wi-Fi is slow in the back of the store',
+      'Customers complain about dropped service',
+      'Connections fail when too many devices join',
+      'Slow point-of-sale or cloud app performance',
+    ],
+    faqs: [
+      ['Can you support our staff and guest Wi-Fi separately?', 'Absolutely — we build separate SSIDs and permissions so guests never touch your internal network.'],
+      ['Do you provide the hardware?', 'Yes, we can source and install access points that fit your space and budget.'],
+    ],
+  },
+  {
+    slug: 'security-cameras',
+    title: 'Security Cameras',
+    short: 'Camera systems installed and configured for clear coverage and easy review.',
+    intro: 'We deploy cameras that capture the right details, integrate with your network, and make it simple to review activity when you need it.',
+    includes: [
+      'Security camera site assessment',
+      'Camera mounting and wiring',
+      'Recording and remote access setup',
+      'Privacy zone and motion alert configuration',
+      'Training for your team',
+    ],
+    outcomes: [
+      ['Better visibility', 'Footage that actually shows faces, license plates, and important events.'],
+      ['Faster investigations', 'Quick access to clips when something happens.'],
+      ['Shared peace of mind', 'A system your staff can use comfortably.'],
+    ],
+    signs: [
+      'Important areas are out of view',
+      'Footage is blurry or unusable',
+      'Recording stops or overwrites too quickly',
+      'Remote access is slow or unavailable',
+    ],
+    faqs: [
+      ['Can I view camera footage from my phone?', 'Yes — we set up secure remote access so you can check in from wherever you are.'],
+      ['Do the cameras record continuously?', 'We configure recording to meet your needs, whether that means continuous capture, motion-triggered clips, or both.'],
+    ],
+  },
+  {
+    slug: 'data-backup',
+    title: 'Data Backup',
+    short: 'Backup systems that protect your files, POS data, and business records.',
+    intro: 'Losing data can stop your business. We build backup plans that recover quickly and keep your information safe from accidents, hardware failure, and ransomware.',
+    includes: [
+      'Backup planning for files and systems',
+      'Cloud and local backup setup',
+      'Restore testing and verification',
+      'Retention rules for compliance',
+      'Monitoring and alerting',
+    ],
+    outcomes: [
+      ['Faster recovery', 'Restore files and systems without long delays.'],
+      ['Reduced risk', 'Protect against hardware failure, theft, and ransomware.'],
+      ['Confidence', 'A backup plan that actually works when you need it.'],
+    ],
+    signs: [
+      'No reliable backup in place',
+      'Recoveries take too long',
+      'Files are only saved to one location',
+      'No regular backup verification',
+    ],
+    faqs: [
+      ['How often are backups taken?', 'We tailor the schedule to your business needs, from hourly snapshots to nightly copies.'],
+      ['Can you back up cloud data too?', 'Yes — we support both local and cloud-based backup sources.'],
+    ],
+  },
+  {
+    slug: 'tech-support',
+    title: 'Tech Support',
+    short: 'Ongoing local support for the issues that keep you from doing business.',
+    intro: 'When technology slows you down, you need a responsive local team. We provide support for devices, networks, printers, cloud apps, and more.',
+    includes: [
+      'Help desk and on-site support',
+      'Scheduled maintenance',
+      'Patch management and updates',
+      'Troubleshooting and repairs',
+      'Vendor coordination',
+    ],
+    outcomes: [
+      ['Faster fixes', 'We diagnose and repair issues without long wait times.'],
+      ['Less distraction', 'Your team can focus on customers instead of IT problems.'],
+      ['Predictable care', 'Routine maintenance keeps systems stable.'],
+    ],
+    signs: [
+      'Small problems turn into big outages',
+      'Daily technology interruptions',
+      'No reliable support contact',
+      'Staff are doing workarounds instead of real fixes',
+    ],
+    faqs: [
+      ['Do you offer emergency support?', 'Yes — we prioritize business-critical issues and can respond quickly for clients.'],
+      ['Can you support both on-site and remote setups?', 'Yes, we help with both in-person visits and remote troubleshooting.'],
+    ],
+  },
+  {
+    slug: 'hardware-purchasing',
+    title: 'Hardware Purchasing',
+    short: 'Buy the right devices and equipment without overpaying for the wrong technology.',
+    intro: 'We help you choose and buy the hardware that fits your business, budget, and existing systems — then install it cleanly so it works from day one.',
+    includes: [
+      'Needs analysis and specification',
+      'Vendor pricing and sourcing',
+      'Device setup and configuration',
+      'Warranty and lifecycle advice',
+      'On-site installation support',
+    ],
+    outcomes: [
+      ['Right-sized equipment', 'Hardware that matches your needs instead of a generic quote.'],
+      ['Streamlined deployment', 'Devices arrive ready to use.'],
+      ['Lower total cost', 'We avoid unnecessary upgrades and hidden fees.'],
+    ],
+    signs: [
+      'Tech purchases feel uncertain',
+      'You’re tempted by the cheapest option',
+      'Equipment doesn’t work well together',
+      'Upgrades keep breaking existing systems',
+    ],
+    faqs: [
+      ['Can you help with vendor quotes?', 'Yes — we compare reliable options and recommend what fits your needs.'],
+      ['Do you set up the equipment too?', 'Absolutely — purchase is only part of the service. Installation and testing are included.'],
+    ],
+  },
+  {
+    slug: 'cybersecurity',
+    title: 'Cybersecurity',
+    short: 'Protect your business from malware, ransomware, and unauthorized access.',
+    intro: 'Security is not a one-time fix. We build protections around your network, devices, and data so business can keep moving even when threats appear.',
+    includes: [
+      'Vulnerability review and hardening',
+      'Firewall and endpoint protection',
+      'Email and password training',
+      'Multi-factor authentication setup',
+      'Ongoing monitoring and updates',
+    ],
+    outcomes: [
+      ['Lower risk', 'Fewer vulnerabilities for attackers to exploit.'],
+      ['Better controls', 'Access is limited to the right people and systems.'],
+      ['Recovery readiness', 'We help you bounce back fast if something happens.'],
+    ],
+    signs: [
+      'Password reuse and weak credentials',
+      'No endpoint protection on staff devices',
+      'Unclear device access policies',
+      'No recovery plan for ransomware',
+    ],
+    faqs: [
+      ['Do you help with PCI or HIPAA security?', 'Yes — we can align security controls with the requirements that matter to your business.'],
+      ['Can you monitor for threats continuously?', 'We offer services that keep watch for suspicious activity and alert you quickly.'],
+    ],
+  },
+  {
+    slug: 'pos-systems',
+    title: 'POS Systems',
+    short: 'Point-of-sale setup and integration that makes checkout and inventory easier.',
+    intro: 'From hardware to network connections and payment processing, we set up POS systems so your register works reliably and integrates with the rest of your business tech.',
+    includes: [
+      'POS hardware planning and installation',
+      'Network and payment terminal setup',
+      'Printer and peripheral integration',
+      'Security and compliance review',
+      'Ongoing support and updates',
+    ],
+    outcomes: [
+      ['Smooth checkout', 'Faster, more dependable payments at the point of sale.'],
+      ['Integrated data', 'Sales and inventory systems that talk to each other.'],
+      ['Fewer outages', 'Less time spent fixing registers or printers.'],
+    ],
+    signs: [
+      'Register freezes or disconnects',
+      'Receipts fail to print reliably',
+      'Inventory counts do not match sales',
+      'Payment devices need frequent rebooting',
+    ],
+    faqs: [
+      ['Do you support cloud and local POS systems?', 'Yes — we help with the option that best fits your business and budget.'],
+      ['Can you connect the POS to our network securely?', 'Absolutely — secure device segmentation is part of every install.'],
+    ],
+  },
+];
+
+function getService(slug) {
+  return services.find((service) => service.slug === slug);
+}
+
+// Convenience aliases used across pages.
+const SVCS = services;
+const AD = { PHONE, PHONE_DISPLAY, EMAIL };
+
+return { PHONE, PHONE_DISPLAY, EMAIL, services, getService, SVCS, AD };
+})();
+
+/* ===== src/components/Reveal.jsx ===== */
+const M_Reveal = (function(){
+const { useEffect, useRef, useState } = React;
+
+/** Reveal — fade/slide content in on scroll, with failsafes so nothing ever stays hidden. */
+function Reveal({ children, delay = 0, as: Tag = 'div', className = '', style, ...rest }) {
+  const ref = useRef(null);
+  const [shown, setShown] = useState(() => {
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    return reduce || !('IntersectionObserver' in window);
+  });
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || shown) return;
+    const reveal = () => setShown(true);
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((en) => { if (en.isIntersecting) { reveal(); io.unobserve(en.target); } }),
+      { threshold: 0.1, rootMargin: '0px 0px -8% 0px' }
+    );
+    io.observe(el);
+    const r = el.getBoundingClientRect();
+    const raf = (r.top < window.innerHeight && r.bottom > 0) ? requestAnimationFrame(reveal) : 0;
+    const t = setTimeout(reveal, 1200);
+    return () => { io.disconnect(); clearTimeout(t); if (raf) cancelAnimationFrame(raf); };
+  }, [shown]);
+  return (
+    <Tag ref={ref} className={`reveal ${shown ? 'in' : ''} ${className}`.trim()}
+      style={{ ...style, ...(delay && shown ? { transitionDelay: `${delay}ms` } : null) }} {...rest}>
+      {children}
+    </Tag>
+  );
+}
+
+return { default: Reveal };
+})();
+
+/* ===== src/components/ImageSlot.jsx ===== */
+const M_ImageSlot = (function(){
+const { useEffect, useRef, useState } = React;
+/* ---------- ImageSlot (click/drag to fill, parallax option) ---------- */
+const MAX_DIM = 1400;
+const ACCEPT = ['image/png', 'image/jpeg', 'image/webp', 'image/avif'];
+const SLOT_KEY = (id) => `anchor.ed.imageslot.${id}`;
+async function toDataUrl(file, targetW) {
+  const bitmap = await createImageBitmap(file);
+  try {
+    const cap = Math.min(MAX_DIM, Math.max(1, Math.round(targetW * 2)) || MAX_DIM);
+    const scale = Math.min(1, cap / Math.max(bitmap.width, bitmap.height));
+    const w = Math.max(1, Math.round(bitmap.width * scale));
+    const h = Math.max(1, Math.round(bitmap.height * scale));
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(bitmap, 0, 0, w, h);
+    return canvas.toDataURL('image/webp', 0.85);
+  } finally { bitmap.close && bitmap.close(); }
+}
+const PhIcon = () => (<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>);
+const ClearIcon = () => (<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>);
+function ImageSlot({ id, className = '', placeholder = 'Drop an image', src = '' }) {
+  const [url, setUrl] = useState(null);
+  const [err, setErr] = useState('');
+  const elRef = useRef(null);
+  const inputRef = useRef(null);
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(SLOT_KEY(id));
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: hydrate from storage
+      if (stored && /^data:image\//i.test(stored)) setUrl(stored);
+    } catch { /* storage unavailable */ }
+  }, [id]);
+  async function ingest(file) {
+    if (!file) return;
+    if (!ACCEPT.includes(file.type)) { flash('Use a PNG, JPG or WebP image.'); return; }
+    try {
+      const w = elRef.current?.clientWidth || MAX_DIM;
+      const dataUrl = await toDataUrl(file, w);
+      setUrl(dataUrl);
+      try { localStorage.setItem(SLOT_KEY(id), dataUrl); } catch { /* ignore */ }
+    } catch { flash('Could not read that image.'); }
+  }
+  function flash(msg) { setErr(msg); setTimeout(() => setErr(''), 3000); }
+  function clearOrReplace(e) {
+    e.stopPropagation();
+    if (url) { setUrl(null); try { localStorage.removeItem(SLOT_KEY(id)); } catch { /* ignore */ } }
+    else inputRef.current?.click();
+  }
+  const shown = url || src;
+  return (
+    <div ref={elRef} className={`img-slot ${className}`.trim()}
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={(e) => { e.preventDefault(); ingest(e.dataTransfer.files?.[0]); }}>
+      {shown ? (
+        <>
+          <img src={shown} alt="" loading="lazy" />
+          <button className="clear" onClick={clearOrReplace} aria-label={url ? 'Remove image' : 'Replace image'}>{url ? <ClearIcon /> : <PhIcon />}</button>
+        </>
+      ) : (
+        <div className="ph" onClick={() => inputRef.current?.click()}>
+          <PhIcon />
+          <span>{err || placeholder}</span>
+        </div>
+      )}
+      <input ref={inputRef} type="file" accept={ACCEPT.join(',')} style={{ display: 'none' }} onChange={(e) => ingest(e.target.files?.[0])} />
+    </div>
+  );
+}
+
+
+return { default: ImageSlot };
+})();
+
+/* ===== src/components/SectionHead.jsx ===== */
+const M_SectionHead = (function(){
+
+/* Shared section heading components: Eyebrow (small label with optional index
+   mark) and SectionHead (eyebrow + title + optional lead), used identically
+   across every page. */
+
+function Eyebrow({ ix, children, className = '' }) {
+  return (
+    <p className={`eyebrow ${className}`.trim()}>
+      {ix != null && <span className="ix">{ix}</span>}
+      {children}
+    </p>
+  );
+}
+
+function SectionHead({ ix, eyebrow, title, lead, center, display, className = '' }) {
+  return (
+    <div className={`section-head ${center ? 'center' : ''} ${className}`.trim()}>
+      <Eyebrow ix={ix}>{eyebrow}</Eyebrow>
+      <h2 className={display ? 'title title--display' : 'title'}>{title}</h2>
+      {lead && <p className="lead">{lead}</p>}
+    </div>
+  );
+}
+
+return { Eyebrow, SectionHead };
+})();
+
+/* ===== src/components/CtaBand.jsx ===== */
+const M_CtaBand = (function(){
+const { Link } = RR; const Reveal = M_Reveal.default; const { Eyebrow } = M_SectionHead; const { PHONE, PHONE_DISPLAY } = M_data;
+
+/* ---------- CtaBand ---------- */
+function CtaBand({ ix = '—', eyebrow = 'Get started', heading, sub }) {
+  return (
+    <section className="section--tight">
+      <div className="wrap">
+        <Reveal className="cta-band">
+          <div className="inner">
+            <div>
+              <Eyebrow ix={ix}>{eyebrow}</Eyebrow>
+              <h2>{heading}</h2>
+              <p>{sub}</p>
+            </div>
+            <div className="cta-actions">
+              <Link className="btn btn--lg" to="/contact">Book a Free Consultation</Link>
+              <a className="btn btn--light btn--lg" href={`tel:${PHONE}`}>Call {PHONE_DISPLAY}</a>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+
+return { default: CtaBand };
+})();
+
+/* ===== src/components/Marquee.jsx ===== */
+const M_Marquee = (function(){
+function renderItems(items) {
+  return items.map((item, i) =>
+    typeof item === 'string' ? (
+      <span className="marquee-item" key={i}>{item}</span>
+    ) : (
+      <span className={`marquee-item ${item.muted ? 'is-muted' : ''}`} key={i}>{item.text}</span>
+    )
+  );
+}
+function Marquee({ items = [], speed = 38, ariaLabel = 'Highlights' }) {
+  return (
+    <section className="marquee" aria-label={ariaLabel} style={{ '--marquee-speed': `${speed}s` }}>
+      <div className="marquee-track">
+        <div className="marquee-group" aria-hidden="true">{renderItems(items)}</div>
+        <div className="marquee-group" aria-hidden="true">{renderItems(items)}</div>
+      </div>
+    </section>
+  );
+}
+return { default: Marquee };
+})();
+
+/* ===== src/components/Header.jsx ===== */
+const M_Header = (function(){
+const { useEffect, useState } = React; const { NavLink, useLocation } = RR; const { Anchor, Phone, Menu, X } = M_icons; const { PHONE, PHONE_DISPLAY } = M_data;
+
+function Header() {
+  const [open, setOpen] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: sync menu to route
+    setOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setLoaded(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  useEffect(() => {
+    let resizeTimer;
+    const onResize = () => {
+      document.body.classList.add('is-resizing');
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        document.body.classList.remove('is-resizing');
+      }, 200);
+    };
+    window.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('resize', onResize);
+      clearTimeout(resizeTimer);
+      document.body.classList.remove('is-resizing');
+    };
+  }, []);
+
+  return (
+    <header className={`site-header ${loaded ? 'is-loaded' : ''}`}>
+      <div className="wrap nav">
+        <NavLink
+          className="brand"
+          to="/"
+          aria-label="Anchor Tech Solutions home"
+        >
+          <Anchor className="mark" />
+          <span className="name">
+            Anchor Tech
+            <span>Solutions · Ventura</span>
+          </span>
+        </NavLink>
+        <nav
+          className={`nav-links ${open ? 'open' : ''}`}
+          aria-label="Primary"
+          onClick={(e) => {
+            if (e.target.closest('a')) setOpen(false);
+          }}
+        >
+          <NavLink to="/" end>
+            Home
+          </NavLink>
+          <NavLink to="/services">
+            Services
+          </NavLink>
+          <NavLink to="/about">
+            About
+          </NavLink>
+          <NavLink to="/contact">
+            Contact
+          </NavLink>
+          <NavLink to="/contact" className="btn m-cta">
+            Book a Free Consultation
+          </NavLink>
+        </nav>
+        <div className="nav-cta">
+          <a className="nav-phone" href={`tel:${PHONE}`}>
+            <Phone />
+            {PHONE_DISPLAY}
+          </a>
+          <NavLink className="btn" to="/contact">
+            Get a Quote
+          </NavLink>
+          <button
+            className="nav-toggle"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? <X /> : <Menu />}
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+}
+return { default: Header };
+})();
+
+/* ===== src/components/Footer.jsx ===== */
+const M_Footer = (function(){
+const { Link } = RR; const { Anchor } = M_icons; const { EMAIL, PHONE, PHONE_DISPLAY } = M_data;
+
+function Footer() {
+  return (
+    <footer className="site-footer">
+      <div className="wrap">
+        <div className="footer-grid">
+          <div>
+            <Link className="brand" to="/" aria-label="Anchor Tech Solutions home">
+              <Anchor className="mark" />
+              <span className="name">Anchor Tech<span>Solutions · Ventura</span></span>
+            </Link>
+            <p className="footer-about">Friendly, dependable IT for the small businesses that make Ventura County tick. Setup, security and support from a team right down the road.</p>
+          </div>
+          <div className="footer-col">
+            <h4>Company</h4>
+            <ul>
+              <li><Link to="/">Home</Link></li>
+              <li><Link to="/services">Services</Link></li>
+              <li><Link to="/about">About Us</Link></li>
+              <li><Link to="/contact">Contact</Link></li>
+            </ul>
+          </div>
+          <div className="footer-col">
+            <h4>Services</h4>
+            <ul>
+              <li><Link to="/services/network-setup">Network Setup</Link></li>
+              <li><Link to="/services/wifi-installation">Wi-Fi Installation</Link></li>
+              <li><Link to="/services/security-cameras">Security Cameras</Link></li>
+              <li><Link to="/services/data-backup">Data Backup</Link></li>
+              <li><Link to="/services/tech-support">Tech Support</Link></li>
+            </ul>
+          </div>
+          <div className="footer-col">
+            <h4>Get in touch</h4>
+            <ul className="footer-contact">
+              <li><a href={`tel:${PHONE}`}>{PHONE_DISPLAY}</a></li>
+              <li><a href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
+              <li>Serving all of Ventura County</li>
+            </ul>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <span>© {new Date().getFullYear()} Anchor Tech Solutions. All rights reserved.</span>
+          <span>Ventura · Oxnard · Camarillo · Thousand Oaks · Ojai · Santa Barbara</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+return { default: Footer };
+})();
+
+/* ===== src/pages/Home.jsx ===== */
+const M_Home = (function(){
+const { Link } = RR; const Reveal = M_Reveal.default; const ImageSlot = M_ImageSlot.default; const CtaBand = M_CtaBand.default; const Marquee = M_Marquee.default; const { Eyebrow } = M_SectionHead; const { Arrow, Star } = M_icons;
+
+const services = [
+  { n: '01', to: 'network-setup', t: 'Computer & Network Setup', d: 'New workstations, servers and wired networks installed, configured and ready to go on day one.' },
+  { n: '02', to: 'wifi-installation', t: 'Wi-Fi Installation', d: 'Fast, reliable wireless that reaches every corner — back office, patio and parking lot included.' },
+  { n: '03', to: 'security-cameras', t: 'Security Cameras', d: 'Modern camera systems you can check from your phone, with clear footage when it actually matters.' },
+  { n: '04', to: 'pos-systems', t: 'POS Systems', d: 'Point-of-sale setup that keeps lines moving and syncs cleanly with your payments and inventory.' },
+  { n: '05', to: 'data-backup', t: 'Data Backup & Recovery', d: 'Automatic backups on-site and in the cloud, so a crash or theft never means losing your business.' },
+  { n: '06', to: 'tech-support', t: 'Ongoing Tech Support', d: 'A real person who knows your setup — on call for the day-to-day glitches and the late-night emergencies.' },
+];
+
+const whyPoints = [
+  ['We show up in person', 'On-site visits across the county, usually same- or next-day.'],
+  ['Flat, honest pricing', 'Clear quotes up front — no surprise hourly creep or mystery fees.'],
+  ['One team for everything', 'Setup, security, backups and support — all under one roof.'],
+  ['We speak human', 'No jargon, no condescension — just clear answers you can act on.'],
+];
+
+const features = [
+  { t: 'Fast response', d: 'A 2-hour average response time means problems don\u2019t sit and cost you a day of business.' },
+  { t: 'Familiar faces', d: 'You work with the same small team every time — people who already know your setup.' },
+  { t: 'No surprise bills', d: 'Up-front quotes and simple monthly plans. You always know what you\u2019re paying for.' },
+  { t: 'Security first', d: 'Backups, updates and protection handled quietly in the background, before trouble starts.' },
+];
+
+const testimonials = [
+  { av: 'MR', name: 'Maria Reyes', role: 'Owner, Reyes Family Kitchen — Oxnard', q: 'Our Wi-Fi used to drop every lunch rush. Anchor mapped the whole restaurant, swapped a few things out, and it\u2019s been rock solid for a year. They actually explained what was wrong.' },
+  { av: 'DT', name: 'David Tran', role: 'Manager, Coastline Auto Care — Ventura', q: 'They set up our cameras and back-office network for the new location and had us open on schedule. When a POS terminal acted up, someone was here within the hour. Worth every penny.' },
+  { av: 'SK', name: 'Dr. Susan Kim', role: 'Camarillo Family Dental', q: 'As a small dental office, losing patient records would be a nightmare. Anchor set up automatic backups and walks us through a test restore every quarter. I finally sleep at night.' },
+];
+
+const marqueeItems = [
+  'Network Setup',
+  { text: 'Ventura County', muted: true },
+  'Wi-Fi Installation',
+  { text: 'Same-day visits', muted: true },
+  'Security Cameras',
+  { text: 'No jargon', muted: true },
+  'POS Systems',
+  { text: '2-hr response', muted: true },
+  'Data Backup & Recovery',
+  { text: 'Locally owned', muted: true },
+  'Ongoing Tech Support',
+  { text: '120+ businesses', muted: true },
+];
+
+function Home() {
+  return (
+    <>
+      {/* HERO */}
+      <section className="hero">
+        <div className="wrap hero-grid">
+          <div className="hero-copy">
+            <Reveal as="p" className="eyebrow">Locally owned · Ventura County</Reveal>
+            <Reveal as="h1" delay={60}>Technology that just <span className="hl">works</span> — so your business can too.</Reveal>
+            <Reveal as="p" className="lead" delay={120}>Anchor Tech Solutions sets up and manages the equipment and IT that keep local businesses running. From Wi-Fi and networks to security cameras, POS systems and backups — we handle the tech so you can get back to your customers.</Reveal>
+            <Reveal className="hero-actions" delay={180}>
+              <Link className="btn btn--lg" to="/contact">Book a Free Consultation <Arrow /></Link>
+              <Link className="btn btn--ghost btn--lg" to="/services">See our services</Link>
+            </Reveal>
+            <Reveal className="trust-row" delay={240}>
+              <div className="trust-item">Same-day & next-day visits</div>
+              <div className="trust-item">No long-term contracts</div>
+              <div className="trust-item">Plain-English, no jargon</div>
+            </Reveal>
+          </div>
+          <Reveal className="hero-visual" delay={120}>
+            <ImageSlot id="home-hero" className="hero-slot" placeholder="Drop a hero photo — your team, a job site, or local storefront" src="https://images.unsplash.com/photo-1758519288814-bb9f97e4df95?w=1400&q=80&auto=format&fit=crop" />
+            <div className="hero-badge hero-badge--tl">
+              <div><b>2-hr</b><small>avg. response time</small></div>
+            </div>
+            <div className="hero-badge hero-badge--br">
+              <div><b>120+</b><small>local businesses served</small></div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* PROOF STRIP */}
+      <div className="proof">
+        <div className="wrap proof-inner">
+          <span>Trusted by Ventura County</span>
+          <div className="proof-stat"><b>120+</b><small>businesses supported</small></div>
+          <div className="proof-sep" />
+          <div className="proof-stat"><b>12 yrs</b><small>serving the coast</small></div>
+          <div className="proof-sep" />
+          <div className="proof-stat"><b>4.9★</b><small>average review</small></div>
+          <div className="proof-sep" />
+          <div className="proof-stat"><b>2 hrs</b><small>avg. response</small></div>
+        </div>
+      </div>
+
+      {/* SERVICES PREVIEW */}
+      <section className="section">
+        <div className="wrap">
+          <Reveal className="head-split">
+            <div className="section-head">
+              <Eyebrow ix="01">What we do</Eyebrow>
+              <h2 className="title">Everything your business needs to stay connected</h2>
+            </div>
+            <div className="head-rail">
+              <p className="rail-line">One local team for setup, security and support — so you’re not juggling five vendors and a stack of help-desk tickets.</p>
+              <div className="rail-meta">
+                <b>6</b>
+                <span><i>core services</i><i>one accountable team</i></span>
+              </div>
+            </div>
+          </Reveal>
+          <div className="cards" style={{ marginTop: 52 }}>
+            {services.map(({ n, to, t, d }) => (
+              <Reveal as={Link} to={`/services/${to}`} className="card card--link" key={n} delay={0}>
+                <span className="num">{n}</span>
+                <h3>{t}</h3>
+                <p>{d}</p>
+                <span className="card-go">Learn more <Arrow /></span>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal style={{ textAlign: 'center', marginTop: 42 }}>
+            <Link className="textlink" to="/services">View all services & what’s included <Arrow /></Link>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* WHY US */}
+      <section className="section mist">
+        <div className="wrap split">
+          <Reveal>
+            <ImageSlot id="home-why" className="split-slot" placeholder="Drop a photo — on-site work, a happy client, or your shop" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&q=80&auto=format&fit=crop" />
+          </Reveal>
+          <Reveal delay={100}>
+            <Eyebrow ix="02">Why local businesses choose us</Eyebrow>
+            <h2 className="title">A real local partner, not a faraway help desk</h2>
+            <p className="lead">We live and work in Ventura County. When something breaks, you reach a neighbor who can drive over — not a call center reading from a script three time zones away.</p>
+            <ul className="check-list">
+              {whyPoints.map(([b, d]) => (
+                <li key={b}><div><b>{b}</b><span className="d">{d}</span></div></li>
+              ))}
+            </ul>
+            <div style={{ marginTop: 32 }}><Link className="btn" to="/about">More about our team <Arrow /></Link></div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* FEATURES */}
+      <section className="section">
+        <div className="wrap">
+          <Reveal className="head-split">
+            <div className="section-head">
+              <Eyebrow ix="03">The Anchor difference</Eyebrow>
+              <h2 className="title">Built around how small businesses actually run</h2>
+            </div>
+            <div className="head-rail">
+              <p className="rail-line">Four habits that decide whether technology helps your day or quietly hijacks it.</p>
+            </div>
+          </Reveal>
+          <div className="feature-grid" style={{ marginTop: 52 }}>
+            {features.map(({ t, d }, i) => (
+              <Reveal className="feature" key={t} delay={i * 80}>
+                <h3>{t}</h3>
+                <p>{d}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="section mist">
+        <div className="wrap">
+          <Reveal className="head-split">
+            <div className="section-head">
+              <Eyebrow ix="04">What our clients say</Eyebrow>
+              <h2 className="title">Trusted by the businesses down the street</h2>
+            </div>
+            <div className="head-rail">
+              <p className="rail-line">Real Ventura County owners, in their own words.</p>
+              <div className="rail-meta">
+                <b>4.9★</b>
+                <span><i>average across</i><i>120+ businesses</i></span>
+              </div>
+            </div>
+          </Reveal>
+          <div className="tcards" style={{ marginTop: 52 }}>
+            {testimonials.map(({ av, name, role, q }, i) => (
+              <Reveal as="figure" className="tcard" key={name} delay={i * 80}>
+                <div className="stars" aria-label="5 out of 5 stars">
+                  {Array.from({ length: 5 }).map((_, k) => <Star key={k} />)}
+                </div>
+                <blockquote>&ldquo;{q}&rdquo;</blockquote>
+                <figcaption className="who"><span className="av">{av}</span><div><b>{name}</b><small>{role}</small></div></figcaption>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* REVOLVING RIBBON */}
+      <Marquee items={marqueeItems} speed={42} ariaLabel="What we do across Ventura County" />
+
+      <CtaBand
+        ix="05"
+        eyebrow="Get started"
+        heading="Let’s get your tech working for you."
+        sub="Book a free, no-pressure consultation. We’ll learn your business, walk your space, and send a clear plan and quote — no obligation."
+      />
+    </>
+  );
+}
+
+return { default: Home };
+})();
+
+/* ===== src/pages/Services.jsx ===== */
+const M_Services = (function(){
+const { Link } = RR; const Reveal = M_Reveal.default; const CtaBand = M_CtaBand.default; const { Eyebrow } = M_SectionHead; const { Chevron, Arrow } = M_icons; const { SVCS } = M_data;
+
+/* ---------------- Services index ---------------- */
+const heroFacts = [
+  ['01', '8 core services', 'Setup, security, backups and day-to-day support'],
+  ['02', '2-hour response', 'Average time to reach a real person who knows you'],
+  ['03', 'Flat-rate quotes', 'Approved up front — before any work begins'],
+  ['04', 'No long contracts', 'You stay because it works, not because you’re locked in'],
+];
+const processSteps = [
+  ['1', 'Free consultation', 'We learn your business, walk your space, and listen to what’s actually slowing you down — no obligation, no jargon.'],
+  ['2', 'Clear plan & quote', 'You get a plain-English plan with flat, up-front pricing. You approve it before we lift a finger.'],
+  ['3', 'Setup & ongoing care', 'We install everything cleanly, show your team the ropes, and stay on call whenever you need us.'],
+];
+
+function Services() {
+  return (
+    <>
+      <section className="page-hero page-hero--split">
+        <div className="wrap">
+          <div className="hero-lead">
+            <Reveal className="crumbs"><Link to="/">Home</Link><Chevron /><span>Services</span></Reveal>
+            <Reveal as="h1" delay={60}>One local team for everything tech.</Reveal>
+            <Reveal as="p" delay={120}>Whether you’re opening a new location or finally fixing the Wi-Fi that’s been driving you crazy, we handle the setup, the security and the day-to-day support — so technology stops being a headache and starts being an advantage.</Reveal>
+            <Reveal className="hero-actions" delay={180}>
+              <Link className="btn" to="/contact">Book a Free Consultation <Arrow /></Link>
+              <a className="btn btn--ghost" href="#services-list">Jump to the list</a>
+            </Reveal>
+          </div>
+          <Reveal className="hero-aside" delay={140}>
+            <span className="hero-figure" aria-hidden="true">08</span>
+            <div className="hero-rail">
+              <div className="rail-head"><span className="rh-ix">—</span><span className="rh-label">At a glance</span></div>
+              {heroFacts.map(([n, t, d]) => (
+                <div className="hero-fact" key={n}>
+                  <span className="hf-n">{n}</span>
+                  <div><b>{t}</b><span>{d}</span></div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="section" id="services-list">
+        <div className="wrap">
+          <Reveal className="head-split" style={{ marginBottom: 14 }}>
+            <div className="section-head"><Eyebrow ix="01">The full list</Eyebrow><h2 className="title">Eight ways we keep you running</h2></div>
+            <div className="head-rail"><p className="rail-line">Every engagement is sized to your business and priced up front. Tap any service for what’s included.</p></div>
+          </Reveal>
+          <div className="svc-list">
+            {SVCS.map((s, i) => (
+              <Reveal as={Link} to={`/services/${s.slug}`} className="svc-row" key={s.slug} delay={(i % 2) * 70}>
+                <span className="svc-n">{String(i + 1).padStart(2, '0')}</span>
+                <div><h3>{s.title}</h3><p>{s.short}</p></div>
+                <span className="svc-go" aria-hidden="true"><Arrow /></span>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal as="p" style={{ color: 'var(--muted)', marginTop: 34, fontSize: '15.5px' }}>
+            Don’t see exactly what you need? We tackle most small-business tech challenges — <Link className="textlink" to="/contact" style={{ display: 'inline' }}>just ask</Link>.
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="section mist">
+        <div className="wrap">
+          <Reveal className="head-split">
+            <div className="section-head"><Eyebrow ix="02">How we work</Eyebrow><h2 className="title title--display">Simple, start to finish</h2></div>
+            <div className="head-rail"><p className="rail-line">No drawn-out sales process. Three straightforward steps to get your tech sorted.</p></div>
+          </Reveal>
+          <div className="steps" style={{ marginTop: 52 }}>
+            {processSteps.map(([n, t, d], i) => (
+              <Reveal className="step" key={n} delay={i * 90}>
+                <span className="n">{n}</span><h3>{t}</h3><p>{d}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <CtaBand ix="03" eyebrow="Not sure yet?" heading="Not sure where to start?" sub="That’s exactly what the free consultation is for. Tell us what’s bugging you and we’ll map out the fix." />
+    </>
+  );
+}
+
+return { default: Services };
+})();
+
+/* ===== src/pages/About.jsx ===== */
+const M_About = (function(){
+const { Link } = RR; const Reveal = M_Reveal.default; const ImageSlot = M_ImageSlot.default; const { Eyebrow } = M_SectionHead; const CtaBand = M_CtaBand.default; const { Chevron, Arrow, Pin } = M_icons;
+
+/* ---------------- About ---------------- */
+const aboutStats = [['12+', 'Years serving Ventura County'], ['120+', 'Local businesses supported'], ['2 hrs', 'Average response time'], ['4.9★', 'Average customer rating']];
+const aboutValues = [
+  { t: 'We’re truly local', d: 'Based in Ventura, serving the whole county. When you need us on-site, we’re a short drive away — not a plane ticket.' },
+  { t: 'Honest, no pressure', d: 'We recommend what your business actually needs — never the most expensive option to pad an invoice.' },
+  { t: 'We speak plain English', d: 'No acronym soup. We explain what’s going on and what your options are, in words that actually make sense.' },
+  { t: 'We don’t disappear', d: 'Setup is just the start. We stick around for the updates, the questions and the emergencies — year after year.' },
+];
+const aboutAreas = ['Ventura', 'Oxnard', 'Camarillo', 'Thousand Oaks', 'Ojai', 'Santa Barbara', 'Santa Paula'];
+
+function About() {
+  return (
+    <>
+      <section className="page-hero page-hero--split">
+        <div className="wrap">
+          <div className="hero-lead">
+            <Reveal className="crumbs"><Link to="/">Home</Link><Chevron /><span>About</span></Reveal>
+            <Reveal as="h1" delay={60}>Your neighbors in tech, here for the long haul.</Reveal>
+            <Reveal as="p" delay={120}>We’re a small, locally owned team that believes great IT support shouldn’t require a corporate contract or a call center. For over a decade, we’ve kept Ventura County’s small businesses running.</Reveal>
+            <Reveal className="hero-actions" delay={180}>
+              <Link className="btn" to="/contact">Work with us <Arrow /></Link>
+              <Link className="btn btn--ghost" to="/services">See our services</Link>
+            </Reveal>
+          </div>
+          <Reveal className="hero-aside" delay={140}>
+            <span className="hero-figure" aria-hidden="true">12</span>
+            <div className="hero-rail">
+              <div className="rail-head"><span className="rh-ix">—</span><span className="rh-label">By the numbers</span></div>
+              {aboutStats.map(([b, s], i) => (
+                <div className="hero-fact" key={s}>
+                  <span className="hf-n">{String(i + 1).padStart(2, '0')}</span>
+                  <div><b>{b}</b><span>{s}</span></div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Story */}
+      <section className="section">
+        <div className="wrap split split--wide-l">
+          <Reveal>
+            <Eyebrow ix="01">Our story</Eyebrow>
+            <h2 className="title">Built on showing up</h2>
+            <p className="lead">Anchor Tech Solutions started in 2014 with a simple frustration: local shops, clinics and offices were being treated like an afterthought by big IT firms — long wait times, confusing bills, and nobody who actually understood their business.</p>
+            <p style={{ marginTop: 18, color: 'var(--muted)' }}>So we built the opposite. A local company small enough to know your name and your setup, but experienced enough to handle anything from a single laptop to a multi-site network. Today we support more than 120 businesses up and down the coast — and most of them came to us from a neighbor’s recommendation.</p>
+            <p style={{ marginTop: 18, color: 'var(--muted)' }}>We’re not trying to be the biggest. We’re trying to be the team you’re genuinely glad you called.</p>
+            <div style={{ marginTop: 30 }}><Link className="btn" to="/contact">Work with us <Arrow /></Link></div>
+          </Reveal>
+          <Reveal delay={100}>
+            <ImageSlot id="about-story" className="split-slot split-slot--tall" placeholder="Drop a photo — the founder, the team, or your office" src="https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?w=1000&q=80&auto=format&fit=crop" />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Stats */}
+      <section className="section navy-bg">
+        <div className="wrap">
+          <Reveal className="head-split">
+            <div className="section-head"><Eyebrow ix="02">By the numbers</Eyebrow><h2 className="title title--display">A decade of keeping the coast online</h2></div>
+            <div className="head-rail"><p className="rail-line">Steady, unglamorous reliability — measured the only way that matters: businesses still running.</p></div>
+          </Reveal>
+          <div className="stat-grid" style={{ marginTop: 48 }}>
+            {aboutStats.map(([b, s], i) => (<Reveal className="stat" key={s} delay={i * 80}><b>{b}</b><span>{s}</span></Reveal>))}
+          </div>
+        </div>
+      </section>
+
+      {/* Values */}
+      <section className="section">
+        <div className="wrap">
+          <Reveal className="head-split">
+            <div className="section-head"><Eyebrow ix="03">Why local businesses hire us</Eyebrow><h2 className="title title--display">What you can count on</h2></div>
+            <div className="head-rail"><p className="rail-line">Four promises we make to every client, from the corner café to the multi-site clinic.</p></div>
+          </Reveal>
+          <div className="feature-index" style={{ marginTop: 48 }}>
+            {aboutValues.map(({ t, d }, i) => (
+              <Reveal className="findex" key={t} delay={i * 70}>
+                <span className="fn">{String(i + 1).padStart(2, '0')}</span>
+                <div><h3>{t}</h3><p>{d}</p></div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Service area */}
+      <section className="section mist">
+        <div className="wrap split split--wide-r">
+          <Reveal delay={100}>
+            <Eyebrow ix="04">Where we work</Eyebrow>
+            <h2 className="title">Proudly serving Ventura County</h2>
+            <p className="lead">From the harbor to the foothills, we cover the communities that make this stretch of coast home. If you’re nearby and not on the list, just ask — we likely cover you too.</p>
+            <div className="chips">{aboutAreas.map((a) => (<span className="chip" key={a}><Pin />{a}</span>))}</div>
+          </Reveal>
+          <Reveal>
+            <ImageSlot id="about-area" className="split-slot split-slot--tall" placeholder="Drop a local photo — coastline, your shop, or a map" src="https://images.unsplash.com/photo-1707159960677-2790b1ca0b43?w=1000&q=80&auto=format&fit=crop" />
+          </Reveal>
+        </div>
+      </section>
+
+      <CtaBand ix="05" eyebrow="Let’s talk" heading="Let’s put a local team in your corner." sub="Book a free consultation and find out how stress-free your business tech can be." />
+    </>
+  );
+}
+
+return { default: About };
+})();
+
+/* ===== src/pages/Contact.jsx ===== */
+const M_Contact = (function(){
+const { useRef, useState } = React; const { Link } = RR; const Reveal = M_Reveal.default; const { Eyebrow } = M_SectionHead; const { Chevron } = M_icons; const { AD } = M_data;
+
+
+
+/* ---------------- Contact ---------------- */
+const serviceOptions = ['Network Setup', 'Wi-Fi Installation', 'Hardware Purchasing Advice', 'Security Cameras', 'POS Systems', 'Data Backup & Recovery', 'Cybersecurity & Protection', 'Ongoing Tech Support', 'Something else'];
+const coverageAreas = ['Ventura', 'Oxnard', 'Camarillo', 'Thousand Oaks', 'Ojai', 'Santa Barbara', 'Santa Paula'];
+const heroFacts = [
+  ['01', 'One business day', 'Typical reply time — usually a lot sooner'],
+  ['02', 'Free consultation', 'We learn your business first, no obligation'],
+  ['03', '24/7 for clients', 'Around-the-clock support when it counts'],
+];
+
+function ContactForm() {
+  const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [service, setService] = useState('');
+  const formRef = useRef(null);
+  function handleSubmit(e) {
+    e.preventDefault();
+    const form = formRef.current;
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    setSending(true);
+    const top = form.getBoundingClientRect().top + window.scrollY - 120;
+    setTimeout(() => { setSending(false); setSent(true); window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' }); }, 900);
+  }
+  if (sent) {
+    return (
+      <div className="form-success">
+        <h3>Thanks — message sent!</h3>
+        <p>We’ve got your request and will be in touch within one business day. Need us sooner? Call <a href={`tel:${AD.PHONE}`} style={{ color: 'var(--accent)', fontWeight: 600 }}>{AD.PHONE_DISPLAY}</a>.</p>
+      </div>
+    );
+  }
+  return (
+    <>
+      <Eyebrow ix="01">Free consultation</Eyebrow>
+      <h2 className="title" style={{ fontSize: 28 }}>Request your free consultation</h2>
+      <p style={{ color: 'var(--muted)', margin: '10px 0 26px', fontSize: '15.5px' }}>
+        Fill out the form and we’ll be in touch. Prefer to talk now? Call <a href={`tel:${AD.PHONE}`} style={{ color: 'var(--accent)', fontWeight: 600 }}>{AD.PHONE_DISPLAY}</a>.
+      </p>
+      <form ref={formRef} noValidate onSubmit={handleSubmit}>
+        <div className="field-row">
+          <div className="field-float"><input type="text" id="name" name="name" placeholder=" " required autoComplete="name" /><label htmlFor="name">Name</label></div>
+          <div className="field-float"><input type="tel" id="phone" name="phone" placeholder=" " required autoComplete="tel" /><label htmlFor="phone">Phone</label></div>
+        </div>
+        <div className="field-float"><input type="email" id="email" name="email" placeholder=" " required autoComplete="email" /><label htmlFor="email">Email</label></div>
+        <div className="field-float field-select">
+          <select id="service" name="service" value={service} onChange={(e) => setService(e.target.value)} className={service ? 'filled' : ''}>
+            <option value="" disabled hidden></option>
+            {serviceOptions.map((o) => <option key={o}>{o}</option>)}
+          </select>
+          <label htmlFor="service">What can we help with? <span className="opt">(optional)</span></label>
+        </div>
+        <div className="field-float"><textarea id="message" name="message" placeholder=" " required rows={4} /><label htmlFor="message">A little about your business</label></div>
+        <button type="submit" className={`btn btn--lg btn--block ${sending ? 'is-loading' : ''}`} disabled={sending}>{sending ? 'Sending…' : 'Send my request'}</button>
+        <p className="form-note">We’ll never share your details. We typically reply within one business day.</p>
+      </form>
+    </>
+  );
+}
+
+function Contact() {
+  return (
+    <>
+      <section className="page-hero page-hero--split">
+        <div className="wrap">
+          <div className="hero-lead">
+            <Reveal className="crumbs"><Link to="/">Home</Link><Chevron /><span>Contact</span></Reveal>
+            <Reveal as="h1" delay={60}>Let’s talk about your tech.</Reveal>
+            <Reveal as="p" delay={120}>Tell us what you need and we’ll get back to you within one business day — usually a lot sooner. Free consultations, honest advice, no pressure.</Reveal>
+          </div>
+          <Reveal className="hero-aside" delay={140}>
+            <span className="hero-figure" aria-hidden="true">Hi</span>
+            <div className="hero-rail">
+              <div className="rail-head"><span className="rh-ix">—</span><span className="rh-label">What to expect</span></div>
+              {heroFacts.map(([n, t, d]) => (
+                <div className="hero-fact" key={n}>
+                  <span className="hf-n">{n}</span>
+                  <div><b>{t}</b><span>{d}</span></div>
+                </div>
+              ))}
+              <div className="rail-chips">
+                {coverageAreas.slice(0, 5).map((a) => <span className="chip" key={a}>{a}</span>)}
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap contact-grid">
+          <Reveal className="contact-card form-card"><ContactForm /></Reveal>
+
+          <Reveal className="contact-card info-card" delay={80}>
+            <Eyebrow ix="02">Direct lines</Eyebrow>
+            <h3>Get in touch directly</h3>
+            <p className="sub">We’re a quick call or email away.</p>
+            <ul className="info-list">
+              <li><div><div className="lbl">Call us</div><a href={`tel:${AD.PHONE}`}>{AD.PHONE_DISPLAY}</a></div></li>
+              <li><div><div className="lbl">Email us</div><a href={`mailto:${AD.EMAIL}`}>{AD.EMAIL}</a></div></li>
+              <li><div><div className="lbl">Service area</div><span className="val">Ventura County, CA<small>Ventura · Oxnard · Camarillo · Thousand Oaks · Ojai · Santa Barbara &amp; nearby</small></span></div></li>
+            </ul>
+            <div className="hours">
+              <div className="hours-lbl">Hours</div>
+              <div className="hours-row"><span>Monday – Friday</span><b>8:00 AM – 6:00 PM</b></div>
+              <div className="hours-row"><span>Saturday</span><b>9:00 AM – 2:00 PM</b></div>
+              <div className="hours-row"><span>Sunday</span><b>Closed</b></div>
+              <div className="hours-row emph"><span>Emergency support</span><b>24/7 for clients</b></div>
+            </div>
+          </Reveal>
+
+          <Reveal className="contact-card next-card" delay={120}>
+            <Eyebrow ix="03">After you hit send</Eyebrow>
+            <h3>What happens next</h3>
+            <ol className="next-steps">
+              <li><span className="ns-ix">01</span><div><b>We reply within one business day</b><span>Usually a lot sooner — often the same afternoon.</span></div></li>
+              <li><span className="ns-ix">02</span><div><b>A quick, no-pressure chat</b><span>We learn your business and what’s actually slowing you down.</span></div></li>
+              <li><span className="ns-ix">03</span><div><b>A clear, flat-rate quote</b><span>Plain-English plan and pricing — approved before any work begins.</span></div></li>
+            </ol>
+          </Reveal>
+
+          <Reveal className="contact-card coverage-card" delay={160}>
+            <Eyebrow ix="04">Coverage</Eyebrow>
+            <h3>Right down the road</h3>
+            <p className="cov-sub">On-site across Ventura County — usually same- or next-day.</p>
+            <div className="chips">{coverageAreas.map((a) => <span className="chip" key={a}>{a}</span>)}</div>
+          </Reveal>
+        </div>
+      </section>
+    </>
+  );
+}
+
+return { default: Contact };
+})();
+
+/* ===== src/pages/ServiceDetail.jsx ===== */
+const M_ServiceDetail = (function(){
+const { useEffect } = React; const { Link, useNavigate, useParams } = RR; const Reveal = M_Reveal.default; const CtaBand = M_CtaBand.default; const { services, getService, PHONE, PHONE_DISPLAY } = M_data; const { Chevron, Check, Arrow } = M_icons; const { Eyebrow } = M_SectionHead;
+
+function ServiceDetail() {
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  const service = getService(slug);
+
+  useEffect(() => {
+    if (slug && !service) navigate('/services', { replace: true });
+  }, [slug, service, navigate]);
+
+  if (!service) return null;
+
+  const idx = services.findIndex((s) => s.slug === slug);
+  const others = services.filter((s) => s.slug !== slug).slice(0, 3);
+
+  return (
+    <>
+      <section className="page-hero">
+        <div className="wrap">
+          <span className="hero-figure" aria-hidden="true">{String(idx + 1).padStart(2, '0')}</span>
+          <Reveal className="crumbs">
+            <Link to="/">Home</Link><Chevron />
+            <Link to="/services">Services</Link><Chevron />
+            <span>{service.title}</span>
+          </Reveal>
+          <Reveal as="h1" delay={60}>{service.title}</Reveal>
+          <Reveal as="p" delay={120}>{service.intro}</Reveal>
+        </div>
+      </section>
+
+      {/* Included + why it matters */}
+      <section className="section">
+        <div className="wrap split split--top">
+          <Reveal>
+            <Eyebrow ix="01">What’s included</Eyebrow>
+            <h2 className="title">Everything you get</h2>
+            <ul className="svc-includes" style={{ marginTop: 26 }}>
+              {service.includes.map((item) => (<li key={item}><span className="tick"><Check /></span><b>{item}</b></li>))}
+            </ul>
+            <div className="split-callout">
+              <span className="sc-label"><i>—</i> Always included</span>
+              <p>Clear documentation and a hands-on walkthrough for your team, so nothing about your setup stays a mystery after we leave.</p>
+            </div>
+          </Reveal>
+          <Reveal delay={100}>
+            <Eyebrow ix="02">Why it matters</Eyebrow>
+            <h2 className="title">What it means for you</h2>
+            <ul className="check-list" style={{ marginTop: 26 }}>
+              {service.outcomes.map(([b, d]) => (<li key={b}><div><b>{b}</b><span className="d">{d}</span></div></li>))}
+            </ul>
+            <div style={{ marginTop: 32 }}><Link className="btn" to="/contact">Get a free quote <Arrow /></Link></div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Signs */}
+      <section className="section mist">
+        <div className="wrap">
+          <Reveal className="head-split">
+            <div className="section-head"><Eyebrow ix="03">Sound familiar?</Eyebrow><h2 className="title title--display">Signs it’s time to call us</h2></div>
+            <div className="head-rail"><p className="rail-line">If any of these ring true, this is exactly the kind of thing we sort out — usually faster and for less than you’d expect.</p></div>
+          </Reveal>
+          <div className="signs-grid" style={{ marginTop: 48 }}>
+            {service.signs.map((sign, i) => (
+              <Reveal className="sign" key={sign} delay={i * 70}>
+                <span className="sign-n">{String(i + 1).padStart(2, '0')}</span><p>{sign}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQs */}
+      <section className="section">
+        <div className="wrap split split--top">
+          <Reveal>
+            <Eyebrow ix="04">Questions</Eyebrow>
+            <h2 className="title">Good to know</h2>
+            <p className="lead" style={{ marginTop: 18 }}>Straight answers to what business owners ask us most about {service.title.toLowerCase()}. Have another? Just ask — no jargon, no pressure.</p>
+            <div style={{ marginTop: 30 }}><Link className="btn btn--ghost" to="/contact">Ask us anything <Arrow /></Link></div>
+          </Reveal>
+          <Reveal delay={100}>
+            <div className="faq-list">
+              {service.faqs.map(([q, a]) => (
+                <details className="faq" key={q}>
+                  <summary>{q}<span className="faq-mark" aria-hidden="true"><Chevron /></span></summary>
+                  <p>{a}</p>
+                </details>
+              ))}
+            </div>
+            <div className="split-callout">
+              <span className="sc-label"><i>—</i> Prefer to talk it through?</span>
+              <p><a href={`tel:${PHONE}`}>{PHONE_DISPLAY}</a> &middot; Mon–Fri 8–6, Sat 9–2. 24/7 emergency support for clients.</p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Other services */}
+      <section className="section mist">
+        <div className="wrap">
+          <Reveal className="head-split">
+            <div className="section-head"><Eyebrow ix="05">Explore more</Eyebrow><h2 className="title">Other services</h2></div>
+            <div className="head-rail"><Link className="textlink" to="/services">All eight services <Arrow /></Link></div>
+          </Reveal>
+          <div className="cards" style={{ marginTop: 52 }}>
+            {others.map((s, i) => (
+              <Reveal as={Link} to={`/services/${s.slug}`} className="card card--link" key={s.slug} delay={i * 60}>
+                <span className="num">{String(services.findIndex((x) => x.slug === s.slug) + 1).padStart(2, '0')}</span>
+                <h3>{s.title}</h3><p>{s.short}</p>
+                <span className="card-go">Learn more <Arrow /></span>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <CtaBand ix="06" eyebrow="Ready when you are" heading={`Ready to sort out your ${service.title.toLowerCase()}?`} sub="Book a free, no-pressure consultation. We’ll learn your business, walk your space, and send a clear plan and quote — no obligation." />
+    </>
+  );
+}
+
+return { default: ServiceDetail };
+})();
+
+
+/* ===== App mount ===== */
+function App(){
+  const { useEffect } = React;
+  const { Routes, Route, useLocation } = RR;
+  const Header = M_Header.default, Footer = M_Footer.default;
+  const Home=M_Home.default, Services=M_Services.default, ServiceDetail=M_ServiceDetail.default, About=M_About.default, Contact=M_Contact.default;
+  function ScrollToTop(){ const {pathname}=useLocation(); useEffect(()=>{ window.scrollTo(0,0); },[pathname]); return null; }
+  function NotFound(){ return (<section className="page-hero"><div className="wrap"><p className="eyebrow">404</p><h1>That page wandered off.</h1></div></section>); }
+  return (<React.Fragment>
+    <ScrollToTop/>
+    <Header/>
+    <main>
+      <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/services" element={<Services/>}/>
+        <Route path="/services/:slug" element={<ServiceDetail/>}/>
+        <Route path="/about" element={<About/>}/>
+        <Route path="/contact" element={<Contact/>}/>
+        <Route path="*" element={<NotFound/>}/>
+      </Routes>
+    </main>
+    <Footer/>
+  </React.Fragment>);
+}
+if(!window.location.hash) window.location.hash = '#/';
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+
+</script>
 </body>
 </html>

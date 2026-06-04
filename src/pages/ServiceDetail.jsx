@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Reveal from '../components/Reveal.jsx';
 import CtaBand from '../components/CtaBand.jsx';
-import { services, getService } from '../data/services.js';
+import { services, getService, PHONE, PHONE_DISPLAY } from '../data/services.js';
 import { Chevron, Check, Arrow } from '../components/icons.jsx';
 import { Eyebrow } from '../components/SectionHead.jsx';
 
@@ -44,6 +44,10 @@ export default function ServiceDetail() {
             <ul className="svc-includes" style={{ marginTop: 26 }}>
               {service.includes.map((item) => (<li key={item}><span className="tick"><Check /></span><b>{item}</b></li>))}
             </ul>
+            <div className="split-callout">
+              <span className="sc-label"><i>—</i> Always included</span>
+              <p>Clear documentation and a hands-on walkthrough for your team, so nothing about your setup stays a mystery after we leave.</p>
+            </div>
           </Reveal>
           <Reveal delay={100}>
             <Eyebrow ix="02">Why it matters</Eyebrow>
@@ -90,6 +94,10 @@ export default function ServiceDetail() {
                   <p>{a}</p>
                 </details>
               ))}
+            </div>
+            <div className="split-callout">
+              <span className="sc-label"><i>—</i> Prefer to talk it through?</span>
+              <p><a href={`tel:${PHONE}`}>{PHONE_DISPLAY}</a> &middot; Mon–Fri 8–6, Sat 9–2. 24/7 emergency support for clients.</p>
             </div>
           </Reveal>
         </div>

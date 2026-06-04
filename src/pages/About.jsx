@@ -18,12 +18,29 @@ const aboutAreas = ['Ventura', 'Oxnard', 'Camarillo', 'Thousand Oaks', 'Ojai', '
 function About() {
   return (
     <>
-      <section className="page-hero">
+      <section className="page-hero page-hero--split">
         <div className="wrap">
-          <span className="hero-figure" aria-hidden="true">12</span>
-          <Reveal className="crumbs"><Link to="/">Home</Link><Chevron /><span>About</span></Reveal>
-          <Reveal as="h1" delay={60}>Your neighbors in tech, here for the long haul.</Reveal>
-          <Reveal as="p" delay={120}>We’re a small, locally owned team that believes great IT support shouldn’t require a corporate contract or a call center. For over a decade, we’ve kept Ventura County’s small businesses running.</Reveal>
+          <div className="hero-lead">
+            <Reveal className="crumbs"><Link to="/">Home</Link><Chevron /><span>About</span></Reveal>
+            <Reveal as="h1" delay={60}>Your neighbors in tech, here for the long haul.</Reveal>
+            <Reveal as="p" delay={120}>We’re a small, locally owned team that believes great IT support shouldn’t require a corporate contract or a call center. For over a decade, we’ve kept Ventura County’s small businesses running.</Reveal>
+            <Reveal className="hero-actions" delay={180}>
+              <Link className="btn" to="/contact">Work with us <Arrow /></Link>
+              <Link className="btn btn--ghost" to="/services">See our services</Link>
+            </Reveal>
+          </div>
+          <Reveal className="hero-aside" delay={140}>
+            <span className="hero-figure" aria-hidden="true">12</span>
+            <div className="hero-rail">
+              <div className="rail-head"><span className="rh-ix">—</span><span className="rh-label">By the numbers</span></div>
+              {aboutStats.map(([b, s], i) => (
+                <div className="hero-fact" key={s}>
+                  <span className="hf-n">{String(i + 1).padStart(2, '0')}</span>
+                  <div><b>{b}</b><span>{s}</span></div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 

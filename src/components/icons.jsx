@@ -4,10 +4,11 @@ export function Anchor({ className = '', ...props }) {
   return (
     <svg
       className={className}
+      width="34"
+      height="34"
       viewBox="0 0 44 44"
       fill="none"
       {...props}
-      
     >
       <g
         stroke="currentColor"
@@ -77,7 +78,16 @@ export function Check({ className = '', ...props }) {
 
 export function Star({ className = '', ...props }) {
   return (
-    <svg className={className} {...iconProps} {...props}>
+    <svg
+      className={className}
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      stroke="none"
+      aria-hidden="true"
+      {...props}
+    >
       <polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9" />
     </svg>
   );
