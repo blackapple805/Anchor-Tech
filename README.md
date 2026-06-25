@@ -1,13 +1,23 @@
-# Anchor Tech Solutions — Editorial site (React)
+# Anchor Tech Solutions — Editorial Site
 
-The editorial single-page design, rebuilt in React (Vite) with a
-**navy + bronze** palette. Newsreader serif + Hanken Grotesk, grain
-overlay, scroll reveals, smooth-scroll nav, mobile menu, and a working
-contact form — all carried over from the original and recolored.
+An editorial single-page site for Anchor Tech Solutions, built in **React (Vite)** with a navy + bronze palette. Newsreader serif paired with Hanken Grotesk, a grain overlay, scroll reveals, smooth-scroll navigation, a mobile menu, and a working contact form.
+
+## Stack
+
+React · Vite · vanilla CSS design system · GitHub Actions (deploy)
+
+## Features
+
+- Editorial layout with a navy/bronze color system
+- Newsreader + Hanken Grotesk type pairing
+- Grain texture overlay and scroll-in reveal animations
+- Smooth-scroll anchor nav with a mobile menu
+- Click/drag-to-fill image placeholders (saved to localStorage)
+- Contact form with success state (ready to wire to a provider)
 
 ## Run it locally
 
-Requires [Node.js](https://nodejs.org) 18+.
+Requires **Node.js 18+** (CI builds on Node 25).
 
 ```bash
 npm install
@@ -21,39 +31,6 @@ npm run build      # outputs to dist/
 npm run preview    # preview the build locally
 ```
 
-Upload the contents of `dist/` to any static host (Netlify, Vercel,
-Cloudflare Pages, GitHub Pages). It's a single page, so no SPA routing
-config is needed.
+Upload the contents of `dist/` to any static host (Netlify, Vercel, Cloudflare Pages, GitHub Pages). It's a single page, so no SPA routing config is needed.
 
 ## Where things live
-
-```
-index.html          title, fonts, favicon
-src/
-  main.jsx          entry point
-  App.jsx           the entire page (header, sections, footer, form)
-  index.css         full design system + the navy/bronze color tokens
-  components/
-    Reveal.jsx      scroll-in animation wrapper
-    ImageSlot.jsx   click/drag-to-fill image placeholder (saves to localStorage)
-```
-
-## Things to change
-
-- **Phone / email:** top of `src/App.jsx` (the `PHONE`, `PHONE_DISPLAY`,
-  `EMAIL` constants).
-- **Images:** the two `ImageSlot` placeholders (hero + why-us). Click to
-  upload; stored in the browser. To hard-code an image, drop a file in a new
-  `src/assets/` folder and swap `ImageSlot` for an `<img>`.
-- **Contact form:** currently shows a success state without sending. Wire the
-  `handleSubmit` in `App.jsx` to Formspree, EmailJS, or your own endpoint to
-  actually deliver messages.
-
-## Color palette
-
-| Token    | Value     | Use                          |
-|----------|-----------|------------------------------|
-| --ink    | #0D2540   | navy text + light buttons    |
-| --dark   | #0B1F38   | dark sections, footer        |
-| --accent | #B0883A   | bronze/gold accents, italics |
-| --paper  | #F5F2EA   | warm ivory background        |
