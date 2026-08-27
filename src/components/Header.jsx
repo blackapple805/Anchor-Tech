@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Anchor, Phone, Menu, X } from './icons.jsx';
-import { PHONE, PHONE_DISPLAY } from '../data/services.js';
+import { Anchor, Menu, X } from './icons.jsx';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -83,10 +82,6 @@ export default function Header() {
           </NavLink>
         </nav>
         <div className="nav-cta">
-          <a className="nav-phone" href={`tel:${PHONE}`}>
-            <Phone />
-            {PHONE_DISPLAY}
-          </a>
           <NavLink className="btn" to="/contact">
             Get a Quote
           </NavLink>

@@ -1,6 +1,4 @@
-export const PHONE = '+18055550142';
-export const PHONE_DISPLAY = '(805) 555-0142';
-export const EMAIL = 'hello@anchortechsolutions.com';
+export const EMAIL = 'eric@anchortechvta.com';
 
 export const services = [
   {
@@ -235,4 +233,4 @@ export function getService(slug) {
 
 // Convenience aliases used across pages.
 export const SVCS = services;
-export const AD = { PHONE, PHONE_DISPLAY, EMAIL };
+export const AD = { EMAIL };

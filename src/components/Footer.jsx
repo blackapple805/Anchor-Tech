@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Anchor } from './icons.jsx';
-import { EMAIL, PHONE, PHONE_DISPLAY } from '../data/services.js';
+import { EMAIL } from '../data/services.js';
 
 function Footer() {
   return (
@@ -36,7 +36,6 @@ function Footer() {
           <div className="footer-col">
             <h4>Get in touch</h4>
             <ul className="footer-contact">
-              <li><a href={`tel:${PHONE}`}>{PHONE_DISPLAY}</a></li>
               <li><a href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
               <li>Serving all of Ventura County</li>
             </ul>

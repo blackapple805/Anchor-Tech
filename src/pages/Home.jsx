@@ -1,10 +1,9 @@
 import { Link } from 'react-router-dom';
 import Reveal from '../components/Reveal.jsx';
-import ImageSlot from '../components/ImageSlot.jsx';
 import CtaBand from '../components/CtaBand.jsx';
 import Marquee from '../components/Marquee.jsx';
 import { Eyebrow } from '../components/SectionHead.jsx';
-import { Arrow, Star, Pin } from '../components/icons.jsx';
+import { Arrow, Pin } from '../components/icons.jsx';
 
 const services = [
   { n: '01', to: 'network-setup', t: 'Computer & Network Setup', d: 'New workstations, servers and wired networks installed, configured and ready to go on day one.' },
@@ -23,16 +22,10 @@ const whyPoints = [
 ];
 
 const features = [
-  { t: 'Fast response', d: 'A 2-hour average response time means problems don\u2019t sit and cost you a day of business.' },
+  { t: 'Fast response', d: 'We treat business-critical problems as urgent, so they don’t sit and cost you a day of business.' },
   { t: 'Familiar faces', d: 'You work with the same small team every time — people who already know your setup.' },
-  { t: 'No surprise bills', d: 'Up-front quotes and simple monthly plans. You always know what you\u2019re paying for.' },
+  { t: 'No surprise bills', d: 'Up-front quotes and simple monthly plans. You always know what you’re paying for.' },
   { t: 'Security first', d: 'Backups, updates and protection handled quietly in the background, before trouble starts.' },
-];
-
-const testimonials = [
-  { av: 'MR', name: 'Maria Reyes', role: 'Owner, Reyes Family Kitchen — Oxnard', q: 'Our Wi-Fi used to drop every lunch rush. Anchor mapped the whole restaurant, swapped a few things out, and it\u2019s been rock solid for a year. They actually explained what was wrong.' },
-  { av: 'DT', name: 'David Tran', role: 'Manager, Coastline Auto Care — Ventura', q: 'They set up our cameras and back-office network for the new location and had us open on schedule. When a POS terminal acted up, someone was here within the hour. Worth every penny.' },
-  { av: 'SK', name: 'Dr. Susan Kim', role: 'Camarillo Family Dental', q: 'As a small dental office, losing patient records would be a nightmare. Anchor set up automatic backups and walks us through a test restore every quarter. I finally sleep at night.' },
 ];
 
 const marqueeItems = [
@@ -43,11 +36,9 @@ const marqueeItems = [
   'Security Cameras',
   { text: 'No jargon', muted: true },
   'POS Systems',
-  { text: '2-hr response', muted: true },
   'Data Backup & Recovery',
   { text: 'Locally owned', muted: true },
   'Ongoing Tech Support',
-  { text: '120+ businesses', muted: true },
 ];
 
 export default function Home() {
@@ -71,30 +62,10 @@ export default function Home() {
             </Reveal>
           </div>
           <Reveal className="hero-visual" delay={120}>
-            <ImageSlot id="home-hero" className="hero-slot" placeholder="Drop a hero photo — your team, a job site, or local storefront" src="https://images.unsplash.com/photo-1758519288814-bb9f97e4df95?w=1400&q=80&auto=format&fit=crop" />
-            <div className="hero-badge hero-badge--tl">
-              <div><b>2-hr</b><small>avg. response time</small></div>
-            </div>
-            <div className="hero-badge hero-badge--br">
-              <div><b>120+</b><small>local businesses served</small></div>
-            </div>
+            <img className="hero-slot" src="https://images.unsplash.com/photo-1758519288814-bb9f97e4df95?w=1400&q=80&auto=format&fit=crop" alt="" loading="lazy" />
           </Reveal>
         </div>
       </section>
-
-      {/* PROOF STRIP */}
-      <div className="proof">
-        <div className="wrap proof-inner">
-          <span>Trusted by Ventura County</span>
-          <div className="proof-stat"><b>120+</b><small>businesses supported</small></div>
-          <div className="proof-sep" />
-          <div className="proof-stat"><b>12 yrs</b><small>serving the coast</small></div>
-          <div className="proof-sep" />
-          <div className="proof-stat"><b>4.9★</b><small>average review</small></div>
-          <div className="proof-sep" />
-          <div className="proof-stat"><b>2 hrs</b><small>avg. response</small></div>
-        </div>
-      </div>
 
       {/* SERVICES PREVIEW */}
       <section className="section">
@@ -132,7 +103,7 @@ export default function Home() {
       <section className="section mist">
         <div className="wrap split">
           <Reveal className="split-figure">
-            <ImageSlot id="home-why" className="split-slot" placeholder="Drop a photo — on-site work, a happy client, or your shop" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&q=80&auto=format&fit=crop" />
+            <img className="split-slot" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&q=80&auto=format&fit=crop" alt="" loading="lazy" />
             <div className="split-badge">
               <span className="sb-pin"><Pin /></span>
               <div><b>Ventura County</b><small>On-site, same- or next-day</small></div>
@@ -175,41 +146,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="section mist">
-        <div className="wrap">
-          <Reveal className="head-split">
-            <div className="section-head">
-              <Eyebrow ix="04">What our clients say</Eyebrow>
-              <h2 className="title">Trusted by the businesses down the street</h2>
-            </div>
-            <div className="head-rail">
-              <p className="rail-line">Real Ventura County owners, in their own words.</p>
-              <div className="rail-meta">
-                <b>4.9★</b>
-                <span><i>average across</i><i>120+ businesses</i></span>
-              </div>
-            </div>
-          </Reveal>
-          <div className="tcards" style={{ marginTop: 52 }}>
-            {testimonials.map(({ av, name, role, q }, i) => (
-              <Reveal as="figure" className="tcard" key={name} delay={i * 80}>
-                <div className="stars" aria-label="5 out of 5 stars">
-                  {Array.from({ length: 5 }).map((_, k) => <Star key={k} />)}
-                </div>
-                <blockquote>&ldquo;{q}&rdquo;</blockquote>
-                <figcaption className="who"><span className="av">{av}</span><div><b>{name}</b><small>{role}</small></div></figcaption>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* REVOLVING RIBBON */}
       <Marquee items={marqueeItems} speed={42} ariaLabel="What we do across Ventura County" />
 
       <CtaBand
-        ix="05"
+        ix="04"
         eyebrow="Get started"
         heading="Let’s get your tech working for you."
         sub="Book a free, no-pressure consultation. We’ll learn your business, walk your space, and send a clear plan and quote — no obligation."

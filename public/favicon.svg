@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44" role="img" aria-label="Anchor Tech Solutions">
+  <rect width="44" height="44" rx="10" fill="#0B1B30"/>
+  <g fill="none" stroke="#B0883A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="22" cy="12.5" r="4"/>
+    <line x1="22" y1="16.5" x2="22" y2="37"/>
+    <path d="M12 23 H8 a14 14 0 0 0 28 0 h-4"/>
+  </g>
+</svg>

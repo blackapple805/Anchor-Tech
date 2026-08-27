@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import Reveal from './Reveal.jsx';
 import { Eyebrow } from './SectionHead.jsx';
-import { PHONE, PHONE_DISPLAY } from '../data/services.js';
+import { EMAIL } from '../data/services.js';
 
 /* ---------- CtaBand ---------- */
 export default function CtaBand({ ix = '—', eyebrow = 'Get started', heading, sub }) {
@@ -17,7 +17,7 @@ export default function CtaBand({ ix = '—', eyebrow = 'Get started', heading, 
             </div>
             <div className="cta-actions">
               <Link className="btn btn--lg" to="/contact">Book a Free Consultation</Link>
-              <a className="btn btn--light btn--lg" href={`tel:${PHONE}`}>Call {PHONE_DISPLAY}</a>
+              <a className="btn btn--light btn--lg" href={`mailto:${EMAIL}`}>Email Us</a>
             </div>
           </div>
         </Reveal>

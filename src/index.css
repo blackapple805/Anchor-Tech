@@ -272,7 +272,7 @@ body.is-resizing .site-header * {
 .trust-item::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; }
 
 .hero-visual { position: relative; }
-.hero-slot { display: block; width: 100%; aspect-ratio: 4/5; border-radius: var(--slot-radius); }
+.hero-slot { display: block; width: 100%; aspect-ratio: 4/5; border-radius: var(--slot-radius); object-fit: cover; }
 .hero-badge {
   position: absolute; z-index: 3; display: flex; align-items: center; gap: 12px;
   background: var(--card); border: 1px solid var(--line-2); border-radius: 4px;
@@ -338,7 +338,7 @@ body.is-resizing .site-header * {
 .split--top { align-items: start; }
 .split--wide-l { grid-template-columns: 1.15fr .85fr; }
 .split--wide-r { grid-template-columns: .85fr 1.15fr; }
-.split-slot { display: block; width: 100%; aspect-ratio: 4/3; border-radius: var(--slot-radius); }
+.split-slot { display: block; width: 100%; aspect-ratio: 4/3; border-radius: var(--slot-radius); object-fit: cover; }
 .split-slot--tall { aspect-ratio: 5/6; }
 
 /* ---- Signs grid (per-service "sound familiar?") ---- */

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Reveal from '../components/Reveal.jsx';
 import CtaBand from '../components/CtaBand.jsx';
-import { services, getService, PHONE, PHONE_DISPLAY } from '../data/services.js';
+import { services, getService, EMAIL } from '../data/services.js';
 import { Chevron, Check, Arrow } from '../components/icons.jsx';
 import { Eyebrow } from '../components/SectionHead.jsx';
 
@@ -97,7 +97,7 @@ export default function ServiceDetail() {
             </div>
             <div className="split-callout">
               <span className="sc-label"><i>—</i> Prefer to talk it through?</span>
-              <p><a href={`tel:${PHONE}`}>{PHONE_DISPLAY}</a> &middot; Mon–Fri 8–6, Sat 9–2. 24/7 emergency support for clients.</p>
+              <p>Email <a href={`mailto:${EMAIL}`}>{EMAIL}</a> and we’ll get back to you within one business day.</p>
             </div>
           </Reveal>
         </div>
