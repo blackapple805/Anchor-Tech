@@ -4,6 +4,10 @@ import CtaBand from '../components/CtaBand.jsx';
 import Marquee from '../components/Marquee.jsx';
 import { Eyebrow } from '../components/SectionHead.jsx';
 import { Arrow, Pin } from '../components/icons.jsx';
+// Self-hosted, Vite-fingerprinted hero (was a hotlink to images.unsplash.com).
+import heroAvif from '../assets/hero-network-1080.avif';
+import heroWebp from '../assets/hero-network-1080.webp';
+import heroJpg from '../assets/hero-network-1080.jpg';
 
 const services = [
   { n: '01', to: 'network-setup', t: 'Computer & Network Setup', d: 'New workstations, servers and wired networks installed, configured and ready to go on day one.' },
@@ -62,7 +66,19 @@ export default function Home() {
             </Reveal>
           </div>
           <Reveal className="hero-visual" delay={120}>
-            <img className="hero-slot" src="https://images.unsplash.com/photo-1758519288814-bb9f97e4df95?w=1400&q=80&auto=format&fit=crop" alt="" loading="lazy" />
+            <picture>
+              <source srcSet={heroAvif} type="image/avif" />
+              <source srcSet={heroWebp} type="image/webp" />
+              <img
+                className="hero-slot"
+                src={heroJpg}
+                width="1080"
+                height="1350"
+                alt="Anchor Tech technician setting up business network equipment"
+                fetchPriority="high"
+                decoding="async"
+              />
+            </picture>
           </Reveal>
         </div>
       </section>
@@ -103,7 +119,7 @@ export default function Home() {
       <section className="section mist">
         <div className="wrap split">
           <Reveal className="split-figure">
-            <img className="split-slot" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&q=80&auto=format&fit=crop" alt="" loading="lazy" />
+            <img className="split-slot" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&q=80&auto=format&fit=crop" width="1000" height="750" alt="Local IT team collaborating at a laptop" loading="lazy" />
             <div className="split-badge">
               <span className="sb-pin"><Pin /></span>
               <div><b>Ventura County</b><small>On-site, same- or next-day</small></div>

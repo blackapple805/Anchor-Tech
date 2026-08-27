@@ -60,7 +60,7 @@ function About() {
             <div style={{ marginTop: 30 }}><Link className="btn" to="/contact">Work with us <Arrow /></Link></div>
           </Reveal>
           <Reveal delay={100}>
-            <img className="split-slot split-slot--tall" src="https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?w=1000&q=80&auto=format&fit=crop" alt="" loading="lazy" />
+            <img className="split-slot split-slot--tall" src="https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?w=1000&q=80&auto=format&fit=crop" width="1000" height="1200" alt="The Anchor Tech team in a working meeting" loading="lazy" />
           </Reveal>
         </div>
       </section>
@@ -93,7 +93,7 @@ function About() {
             <div className="chips">{aboutAreas.map((a) => (<span className="chip" key={a}><Pin />{a}</span>))}</div>
           </Reveal>
           <Reveal>
-            <img className="split-slot split-slot--tall" src="https://images.unsplash.com/photo-1707159960677-2790b1ca0b43?w=1000&q=80&auto=format&fit=crop" alt="" loading="lazy" />
+            <img className="split-slot split-slot--tall" src="https://images.unsplash.com/photo-1707159960677-2790b1ca0b43?w=1000&q=80&auto=format&fit=crop" width="1000" height="1200" alt="Ventura Pier on the Ventura County coast" loading="lazy" />
           </Reveal>
         </div>
       </section>

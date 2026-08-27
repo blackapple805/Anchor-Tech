@@ -7,9 +7,11 @@
 <meta name="description" content="Anchor Tech Solutions is a locally owned IT team for Ventura County small businesses — network and Wi-Fi setup, security cameras, POS systems, data backup, cybersecurity and ongoing support." />
 <title>Anchor Tech Solutions — IT Setup, Security & Support in Ventura County</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Inter:wght@400;500;600;700&display=swap" />
+<!-- Fonts are self-hosted (see @font-face in src/index.css); no third-party font CDN. -->
+<!-- Preload the display serif the H1 uses so it paints in the right metrics without a late swap. -->
+<link rel="preload" as="font" type="font/woff2" href="/src/assets/fonts/fraunces-latin.woff2" crossorigin />
+<!-- Preload the LCP hero image (AVIF, the format modern browsers pick from the <picture>). -->
+<link rel="preload" as="image" type="image/avif" href="/src/assets/hero-network-1080.avif" fetchpriority="high" />
 <style>:root{color-scheme:dark}html,body{margin:0;background:#0B1B30}</style>
 </head>
 <body>
