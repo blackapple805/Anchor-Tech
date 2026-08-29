@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Anchor, Menu, X } from './icons.jsx';
+import { Anchor } from './icons.jsx';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -74,7 +74,13 @@ export default function Header() {
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? <X /> : <Menu />}
+            {/* Three bars morph to an X purely in CSS off aria-expanded; the
+                open/close state and JS below are unchanged. */}
+            <span className="nav-toggle-bars" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
           </button>
         </div>
       </div>

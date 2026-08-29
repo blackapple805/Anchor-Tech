@@ -282,7 +282,22 @@ em, .it { font-style: italic; }
 .nav-phone svg { width: 16px; height: 16px; color: var(--accent); }
 .nav-phone:hover { color: var(--accent); }
 .nav-toggle { display: none; background: none; border: 0; cursor: pointer; color: var(--ink); padding: 6px; }
-.nav-toggle svg { width: 26px; height: 26px; }
+/* Hamburger -> X. The three bars sit at fixed top/50%/bottom positions and only
+   ever animate transform + opacity (never width/height/margin/top), so morphing
+   to the X never triggers layout. Transforms live on the bars, which are
+   descendants of the fixed header — not on any of its ancestors. */
+.nav-toggle-bars { position: relative; display: block; width: 26px; height: 18px; }
+.nav-toggle-bars span {
+  position: absolute; left: 0; width: 100%; height: 2px;
+  background: currentColor; border-radius: 2px;
+  transition: transform .3s var(--ease), opacity .3s var(--ease);
+}
+.nav-toggle-bars span:nth-child(1) { top: 0; }
+.nav-toggle-bars span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+.nav-toggle-bars span:nth-child(3) { bottom: 0; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(2) { opacity: 0; transform: translateY(-50%) scaleX(0); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
 /* ---- Page hero (interior pages) — shared anatomy ---- */
 .page-hero { padding-top: calc(var(--header-total) + clamp(58px, 9vw, 116px)); padding-bottom: clamp(44px, 7vw, 84px); border-bottom: 1px solid var(--line); position: relative; }
@@ -832,14 +847,20 @@ em, .it { font-style: italic; }
     flex-direction: column; align-items: stretch; gap: 0;
     background: var(--paper); border-bottom: 1px solid var(--line);
     padding: 10px var(--gutter) 26px;
-    /* ease-out (no overshoot) so the panel settles cleanly instead of
-       bouncing back when the slide-in finishes */
-    transform: translateY(-130%); opacity: 0;
-    transition: transform .42s cubic-bezier(.32,.72,0,1), opacity .3s ease;
+    /* Closed: fade + a small lift only (no big slide), then flip visibility off
+       so the panel is neither interactive nor focusable while hidden. Inset is
+       unchanged and it stays a header-anchored strip, not a full-viewport
+       overlay. visibility is delayed to the end of the fade so it can animate
+       out before disappearing. */
+    transform: translateY(-8px); opacity: 0; visibility: hidden;
+    transition: transform .32s var(--ease), opacity .28s ease, visibility 0s linear .32s;
     max-height: calc(100dvh - var(--header-total)); overflow-y: auto;
-    will-change: transform;
+    will-change: transform, opacity;
   }
-  .nav-links.open { transform: none; opacity: 1; }
+  .nav-links.open {
+    transform: none; opacity: 1; visibility: visible;
+    transition: transform .32s var(--ease), opacity .28s ease, visibility 0s;
+  }
   .nav-links a:not(.btn) { font-size: 17px; padding: 15px 0; border-bottom: 1px solid var(--line); }
   .nav-links a:not(.btn)::after { display: none; }
   .nav-links .m-cta { display: inline-flex; margin-top: 18px; }
@@ -898,6 +919,15 @@ em, .it { font-style: italic; }
   .cta-band .eyebrow { justify-content: center; }
   .cta-band h2,
   .cta-band p { margin-left: auto; margin-right: auto; }
+}
+
+/* Respect reduced-motion: drop the hamburger morph and the mobile panel
+   entrance to instant. Placed after the rules above (and matching .nav-links.open
+   at equal specificity) so it wins the cascade. */
+@media (prefers-reduced-motion: reduce) {
+  .nav-toggle-bars span,
+  .nav-links,
+  .nav-links.open { transition: none; }
 }
 
 @media (max-width: 540px) {
