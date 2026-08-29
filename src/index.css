@@ -236,28 +236,19 @@ em, .it { font-style: italic; }
 /* ---- Header ---- */
 .site-header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  /* background-color (not the shorthand) lives ON the fixed element itself.
+     iOS 26 Safari tints the status-bar strip by sampling background-color /
+     backdrop-filter of fixed elements near the top edge — and it reads the
+     element, NOT pseudo-elements. Moving the glass onto ::before left Safari
+     nothing to sample, so the strip went untinted after scroll. Opaque navy
+     keeps the header and page in sync and needs no blur. */
+  background-color: var(--paper);
   border-bottom: 1px solid var(--line);
   padding-top: env(safe-area-inset-top, 0px);
-  transform: translateY(0);
-}
-/* iOS 26 Safari clips a fixed element's OWN background/backdrop-filter to the
-   visual viewport, so the translucent bar stops at the safe-area edge and the
-   status-bar strip shows page content through. Painting the glass on an
-   absolutely-positioned child fills the full padding box (safe-area strip
-   included) and is not subject to that clip — the documented workaround.
-   z-index: -1 keeps the glass behind the nav content but inside .site-header's
-   stacking context, so it still paints above the page. */
-.site-header::before {
-  content: "";
-  position: absolute; inset: 0; z-index: -1;
-  pointer-events: none;
-  background: color-mix(in srgb, var(--paper) 82%, transparent);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-  backdrop-filter: blur(14px) saturate(120%);
 }
 
 .site-header.is-loaded {
-  animation: headerDropIn .7s var(--ease) both;
+  animation: headerDropIn .7s var(--ease) backwards;
 }
 
 @keyframes headerDropIn {
@@ -293,7 +284,7 @@ em, .it { font-style: italic; }
 .nav-toggle svg { width: 26px; height: 26px; }
 
 /* ---- Page hero (interior pages) — shared anatomy ---- */
-.page-hero { padding-top: calc(var(--header-h) + clamp(58px, 9vw, 116px)); padding-bottom: clamp(44px, 7vw, 84px); border-bottom: 1px solid var(--line); position: relative; }
+.page-hero { padding-top: calc(var(--header-total) + clamp(58px, 9vw, 116px)); padding-bottom: clamp(44px, 7vw, 84px); border-bottom: 1px solid var(--line); position: relative; }
 .page-hero .wrap { position: relative; }
 .page-hero h1 { font-size: clamp(2.6rem, 6.5vw, 5.2rem); font-weight: 370; letter-spacing: -.03em; line-height: .98; max-width: 18ch; margin-top: 6px; }
 .page-hero > .wrap > p { font-family: var(--grotesk); font-size: clamp(16px, 1.6vw, 19px); color: var(--body-text); line-height: 1.7; max-width: 58ch; margin-top: 24px; }
@@ -306,7 +297,7 @@ em, .it { font-style: italic; }
 .crumbs span { color: var(--ink-2); }
 
 /* ---- Home hero ---- */
-.hero { padding-top: calc(var(--header-h) + clamp(52px, 9vw, 104px)); padding-bottom: clamp(44px, 7vw, 88px); position: relative; }
+.hero { padding-top: calc(var(--header-total) + clamp(52px, 9vw, 104px)); padding-bottom: clamp(44px, 7vw, 88px); position: relative; }
 .hero-grid { display: grid; grid-template-columns: 1.08fr .92fr; gap: clamp(40px, 6vw, 88px); align-items: center; }
 .hero-copy .eyebrow { margin-bottom: 20px; }
 .hero-copy h1 { font-size: clamp(2.7rem, 5.6vw, 4.9rem); font-weight: 370; letter-spacing: -.03em; line-height: .98; }
@@ -827,6 +818,9 @@ em, .it { font-style: italic; }
   .nav-links { gap: 22px; }
   .nav-cta { gap: 14px; }
   .nav-phone { display: none; }
+}
+@media (max-width: 760px) {
+  :root { --header-h: 62px; }
 }
 
 @media (max-width: 760px) {
