@@ -236,11 +236,24 @@ em, .it { font-style: italic; }
 /* ---- Header ---- */
 .site-header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: color-mix(in srgb, var(--paper) 82%, transparent);
-  backdrop-filter: blur(14px) saturate(120%);
   border-bottom: 1px solid var(--line);
   padding-top: env(safe-area-inset-top, 0px);
   transform: translateY(0);
+}
+/* iOS 26 Safari clips a fixed element's OWN background/backdrop-filter to the
+   visual viewport, so the translucent bar stops at the safe-area edge and the
+   status-bar strip shows page content through. Painting the glass on an
+   absolutely-positioned child fills the full padding box (safe-area strip
+   included) and is not subject to that clip — the documented workaround.
+   z-index: -1 keeps the glass behind the nav content but inside .site-header's
+   stacking context, so it still paints above the page. */
+.site-header::before {
+  content: "";
+  position: absolute; inset: 0; z-index: -1;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--paper) 82%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  backdrop-filter: blur(14px) saturate(120%);
 }
 
 .site-header.is-loaded {
