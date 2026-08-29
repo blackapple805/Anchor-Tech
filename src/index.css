@@ -810,7 +810,8 @@ em, .it { font-style: italic; }
 /* ---- Responsive ---- */
 @media (max-width: 1000px) {
   .hero-grid { grid-template-columns: 1fr; gap: 44px; }
-  .hero-visual { max-width: 520px; }
+  .hero-visual { max-width: 520px; aspect-ratio: 16/10; }
+  .hero-slot { aspect-ratio: 16/10; }
   .hero-badge--tl { left: 0; }
   .hero-badge--br { right: 0; }
   .head-split { grid-template-columns: 1fr; gap: 24px; align-items: start; }
