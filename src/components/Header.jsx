@@ -27,23 +27,6 @@ export default function Header() {
     return () => cancelAnimationFrame(id);
   }, []);
 
-  useEffect(() => {
-    let resizeTimer;
-    const onResize = () => {
-      document.body.classList.add('is-resizing');
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        document.body.classList.remove('is-resizing');
-      }, 200);
-    };
-    window.addEventListener('resize', onResize);
-    return () => {
-      window.removeEventListener('resize', onResize);
-      clearTimeout(resizeTimer);
-      document.body.classList.remove('is-resizing');
-    };
-  }, []);
-
   return (
     <header className={`site-header ${loaded ? 'is-loaded' : ''}`}>
       <div className="wrap nav">

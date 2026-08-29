@@ -94,6 +94,10 @@
   --gutter: clamp(22px, 6vw, 96px);
   --ease: cubic-bezier(.22,.7,.2,1);
   --header-h: 78px;
+  /* Full rendered header height including the iOS safe-area padding-top the
+     fixed .site-header adds. env() is 0 without viewport-fit=cover / on desktop,
+     so this collapses to --header-h and desktop layout is unchanged. */
+  --header-total: calc(var(--header-h) + env(safe-area-inset-top, 0px));
 
   /* ---- NEW named tokens (no inline magic values) ---- */
   /* 3-tier vertical rhythm scale */
@@ -235,22 +239,14 @@ em, .it { font-style: italic; }
   background: color-mix(in srgb, var(--paper) 82%, transparent);
   backdrop-filter: blur(14px) saturate(120%);
   border-bottom: 1px solid var(--line);
-  /* Entry animation plays once on first load only. It is intentionally NOT
-     applied here so a resize/repaint can never replay it (that replay was the
-     "navbar elevates, disappears, then recovers" glitch). The .is-loaded class
-     is added once on mount; resize never touches it. */
+  padding-top: env(safe-area-inset-top, 0px);
   transform: translateY(0);
 }
+
 .site-header.is-loaded {
   animation: headerDropIn .7s var(--ease) both;
 }
-/* While the window is actively being resized, hard-freeze the header so no
-   transition or animation can fire mid-drag. */
-body.is-resizing .site-header,
-body.is-resizing .site-header * {
-  animation: none !important;
-  transition: none !important;
-}
+
 @keyframes headerDropIn {
   from { opacity: 0; transform: translateY(-100%); }
   to { opacity: 1; transform: translateY(0); }
@@ -627,7 +623,7 @@ body.is-resizing .site-header * {
 .hours-row.emph b { color: var(--accent); }
 
 /* ---- Footer ---- */
-.site-footer { background: var(--dark); color: var(--cream-on-dark); padding-top: clamp(60px, 8vw, 96px); border-top: 1px solid var(--line); }
+.site-footer { background: var(--dark); color: var(--cream-on-dark); padding-top: clamp(60px, 8vw, 96px); padding-bottom: env(safe-area-inset-bottom, 0px); border-top: 1px solid var(--line); }
 .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.4fr; gap: 40px; padding-bottom: clamp(40px, 5vw, 60px); }
 .site-footer .brand .name { color: var(--cream-on-dark); }
 .footer-about { font-family: var(--grotesk); font-size: 15px; color: #A7AFBC; line-height: 1.7; max-width: 32ch; margin-top: 20px; }
@@ -824,7 +820,7 @@ body.is-resizing .site-header * {
   .nav-cta .nav-phone, .nav-cta > .btn { display: none; }
   .nav-toggle { display: inline-grid; place-items: center; }
   .nav-links {
-    position: fixed; inset: var(--header-h) 0 auto 0;
+    position: fixed; inset: var(--header-total) 0 auto 0;
     flex-direction: column; align-items: stretch; gap: 0;
     background: var(--paper); border-bottom: 1px solid var(--line);
     padding: 10px var(--gutter) 26px;
@@ -832,7 +828,7 @@ body.is-resizing .site-header * {
        bouncing back when the slide-in finishes */
     transform: translateY(-130%); opacity: 0;
     transition: transform .42s cubic-bezier(.32,.72,0,1), opacity .3s ease;
-    max-height: calc(100vh - var(--header-h)); overflow-y: auto;
+    max-height: calc(100dvh - var(--header-total)); overflow-y: auto;
     will-change: transform;
   }
   .nav-links.open { transform: none; opacity: 1; }
