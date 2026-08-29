@@ -258,7 +258,7 @@ em, .it { font-style: italic; }
 .site-header .nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: var(--header-h); gap: 28px; }
 .brand { display: inline-flex; align-items: center; gap: 12px; margin-right: auto; }
 .brand .mark { width: 34px; height: 34px; flex: none; }
-.brand .name { font-family: var(--serif); font-size: 21px; line-height: 1; letter-spacing: -.02em; color: var(--ink); display: flex; flex-direction: column; gap: 3px; }
+.brand .name { font-family: var(--serif); font-size: 21px; line-height: 1; letter-spacing: -.02em; color: var(--ink); display: flex; flex-direction: column; gap: 3px; white-space: nowrap; }
 .brand .name span { font-family: var(--grotesk); font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--muted-2); }
 
 /* grid-column pins the links to the center track. It is explicit (not left to
@@ -842,6 +842,13 @@ em, .it { font-style: italic; }
 @media (max-width: 760px) {
   .nav-cta .nav-phone, .nav-cta > .btn { display: none; }
   .nav-toggle { display: inline-grid; place-items: center; }
+  /* Mobile header: [empty spacer] [centered logo] [hamburger]. Both outer
+     columns are fixed to the hamburger button's width (26px bars + 2*6px
+     padding = 38px) so the logo is centered in the FULL header width, not in
+     the leftover space. The left column is simply left empty — no spacer
+     element needed. The desktop 1fr auto 1fr grid (>=760px) is untouched. */
+  .site-header .nav { grid-template-columns: 38px 1fr 38px; }
+  .brand { grid-column: 2; justify-self: center; margin-right: 0; }
   .nav-links {
     position: fixed; inset: var(--header-total) 0 auto 0;
     flex-direction: column; align-items: stretch; gap: 0;
