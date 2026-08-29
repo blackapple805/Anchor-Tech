@@ -842,13 +842,15 @@ em, .it { font-style: italic; }
 @media (max-width: 760px) {
   .nav-cta .nav-phone, .nav-cta > .btn { display: none; }
   .nav-toggle { display: inline-grid; place-items: center; }
-  /* Mobile header: [empty spacer] [centered logo] [hamburger]. Both outer
-     columns are fixed to the hamburger button's width (26px bars + 2*6px
-     padding = 38px) so the logo is centered in the FULL header width, not in
-     the leftover space. The left column is simply left empty — no spacer
-     element needed. The desktop 1fr auto 1fr grid (>=760px) is untouched. */
-  .site-header .nav { grid-template-columns: 38px 1fr 38px; }
-  .brand { grid-column: 2; justify-self: center; margin-right: 0; }
+  /* Mobile header: logo flush-left at the wrap's left padding, hamburger right.
+     Two-column grid (auto 1fr): brand in the auto track (first item, no gap
+     before it, so its left edge is the wrap's padding-inline just like the
+     pre-Task-1 flex layout), .nav-cta in the 1fr track pushed right by its
+     inherited justify-self:end. The desktop 1fr auto 1fr grid (>=760px) is
+     untouched. */
+  .site-header .nav { grid-template-columns: auto 1fr; }
+  .brand { grid-column: 1; margin-right: 0; }
+  .nav-cta { grid-column: 2; }
   .nav-links {
     position: fixed; inset: var(--header-total) 0 auto 0;
     flex-direction: column; align-items: stretch; gap: 0;
