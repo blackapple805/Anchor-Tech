@@ -250,13 +250,22 @@ em, .it { font-style: italic; }
 @media (prefers-reduced-motion: reduce) {
   .site-header.is-loaded { animation: none; }
 }
-.site-header .nav { display: flex; align-items: center; height: var(--header-h); gap: 28px; }
+/* Three-column grid: logo left, nav links optically centered against the
+   viewport, CTA right. grid-template-columns 1fr auto 1fr centers the middle
+   column on the container midline (which coincides with the viewport midline,
+   since .wrap is margin-inline:auto), so it never drifts when the logo and CTA
+   differ in width the way a flex space-between would. */
+.site-header .nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: var(--header-h); gap: 28px; }
 .brand { display: inline-flex; align-items: center; gap: 12px; margin-right: auto; }
 .brand .mark { width: 34px; height: 34px; flex: none; }
 .brand .name { font-family: var(--serif); font-size: 21px; line-height: 1; letter-spacing: -.02em; color: var(--ink); display: flex; flex-direction: column; gap: 3px; }
 .brand .name span { font-family: var(--grotesk); font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--muted-2); }
 
-.nav-links { display: flex; align-items: center; gap: 30px; }
+/* grid-column pins the links to the center track. It is explicit (not left to
+   auto-placement) so that at <=760px, where .nav-links becomes position:fixed
+   and leaves the grid flow, the CTA/hamburger still lands in column 3 instead
+   of sliding into the vacated middle cell. */
+.nav-links { display: flex; align-items: center; gap: 30px; grid-column: 2; }
 .nav-links a:not(.btn) {
   font-family: var(--grotesk); font-size: 14.5px; font-weight: 500; color: var(--ink-2);
   position: relative; padding: 4px 0; transition: color .25s;
@@ -268,7 +277,7 @@ em, .it { font-style: italic; }
 .nav-links a:not(.btn).active::after { width: 100%; }
 .nav-links .m-cta { display: none; }
 
-.nav-cta { display: flex; align-items: center; gap: 18px; }
+.nav-cta { display: flex; align-items: center; gap: 18px; grid-column: 3; justify-self: end; }
 .nav-phone { display: inline-flex; align-items: center; gap: 9px; font-family: var(--grotesk); font-size: 14.5px; font-weight: 500; color: var(--ink); transition: color .25s; }
 .nav-phone svg { width: 16px; height: 16px; color: var(--accent); }
 .nav-phone:hover { color: var(--accent); }
