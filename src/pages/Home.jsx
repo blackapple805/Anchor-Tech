@@ -117,7 +117,7 @@ export default function Home() {
 
       {/* WHY US */}
       <section className="section mist">
-        <div className="wrap split">
+        <div className="wrap split split--top">
           <Reveal className="split-figure">
             <img className="split-slot" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&q=80&auto=format&fit=crop" width="1000" height="750" alt="Local IT team collaborating at a laptop" loading="lazy" />
             <div className="split-badge">
