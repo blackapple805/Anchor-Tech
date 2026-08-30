@@ -20,7 +20,7 @@ function ContactCard() {
       <p style={{ color: 'var(--muted)', margin: '10px 0 26px', fontSize: '15.5px' }}>
         Tell us a little about your business and what you need help with. We read every message and reply within one business day — usually a lot sooner.
       </p>
-      <a className="btn btn--lg" href={`mailto:${EMAIL}`}>Email {EMAIL}</a>
+      <a className="btn btn--lg btn--email" href={`mailto:${EMAIL}`}>Email {EMAIL}</a>
       <p className="form-note">Include your business name, location, and what’s slowing you down, and we’ll come back with clear next steps.</p>
     </>
   );
