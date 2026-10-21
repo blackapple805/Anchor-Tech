@@ -1,0 +1,304 @@
+/*
+  Anchor Tech skin for Breeze RMM
+  ================================
+  Loaded on every Breeze page by the anchor-rmm-skin Worker (../../src/worker.js).
+  Palette, type and details come from the website's src/index.css so the RMM
+  reads as part of anchortechvta.com.
+
+  This sheet is unlayered, so it wins over Breeze's @layer base / utilities
+  without needing !important (used only against inline styles and the
+  browser's autofill colours).
+
+  Colours are bare HSL triplets because that is how Breeze stores them.
+    navy   #0B1B30  214 63% 12%     ink    #ECF1F8  215 46% 95%
+    navy-2 #0E2138  213 60% 14%     muted  #93A3B8  214 21% 65%
+    card   #122844  214 58% 17%     gold   #E8B84B   42 77% 60%
+    soft   #1C2F49  215 45% 20%     bronze #B0883A   40 50% 46%
+    dark   #071426  215 69%  9%
+*/
+
+/* ---------- Fonts (same files as the website) ---------- */
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url('/anchor-skin/fonts/fraunces-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/anchor-skin/fonts/inter-latin.woff2') format('woff2');
+}
+
+/* Respect Breeze's "system font" accessibility preference. */
+:root:not([data-font='system']) {
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+/* ---------- Light theme: paper and navy ---------- */
+:root {
+  --background: 210 20% 97%;
+  --foreground: 214 45% 14%;
+  --card: 0 0% 100%;
+  --card-foreground: 214 45% 14%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 214 45% 14%;
+
+  --primary: 213 62% 26%;            /* deep harbour blue, 10:1 on white */
+  --primary-foreground: 42 77% 60%;  /* gold on the navy buttons */
+  --paper-primary: 214 63% 18%;
+
+  --secondary: 214 25% 93%;
+  --secondary-foreground: 214 45% 14%;
+  --muted: 214 25% 93%;
+  --muted-foreground: 214 15% 40%;   /* 5.5:1 on white */
+  --accent: 42 60% 93%;              /* pale gold hover wash */
+  --accent-foreground: 214 45% 14%;
+
+  --border: 214 22% 88%;
+  --input: 214 22% 84%;
+  --ring: 40 50% 46%;                /* bronze, 3.3:1 on white */
+}
+
+/* ---------- Dark theme: the website itself ---------- */
+.dark {
+  --background: 214 63% 12%;
+  --foreground: 215 46% 95%;
+  --card: 213 60% 14%;
+  --card-foreground: 215 46% 95%;
+  --popover: 214 58% 17%;
+  --popover-foreground: 215 46% 95%;
+
+  --primary: 42 77% 60%;             /* gold, 9.4:1 on navy */
+  --primary-foreground: 215 69% 9%;
+
+  --secondary: 215 45% 20%;
+  --secondary-foreground: 215 46% 95%;
+  --muted: 215 45% 20%;
+  --muted-foreground: 214 21% 65%;   /* 6.3:1 on cards */
+  --accent: 215 45% 21%;
+  --accent-foreground: 215 46% 95%;
+
+  /* Warning moves to orange so it never reads as the gold brand colour. */
+  --warning: 28 88% 60%;
+  --warning-strong: 28 88% 60%;
+  --warning-foreground: 28 60% 10%;
+  --chart-neutral: 214 30% 32%;
+
+  --border: 213 40% 24%;
+  --input: 213 37% 29%;
+  --ring: 42 77% 60%;
+}
+
+::selection { background: hsl(42 77% 60% / 0.32); }
+
+/* Page titles in the site's serif. */
+h1 {
+  font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+  font-weight: 420;
+  letter-spacing: -0.02em;
+}
+
+/* Sidebar: company name next to the anchor, in the serif like the site header. */
+:is(.u-h-px-22, .w-\[22px\]) + span {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 450;
+  letter-spacing: -0.01em;
+}
+
+/* Browser autofill paints inputs pale yellow; keep them on-theme. */
+input:-webkit-autofill {
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  -webkit-box-shadow: 0 0 0 1000px hsl(var(--card)) inset !important;
+  box-shadow: 0 0 0 1000px hsl(var(--card)) inset !important;
+  caret-color: hsl(var(--foreground));
+}
+input:-webkit-autofill:focus {
+  box-shadow: 0 0 0 1000px hsl(var(--card)) inset, 0 0 0 2px hsl(var(--ring)) !important;
+}
+input:autofill {
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  box-shadow: 0 0 0 1000px hsl(var(--card)) inset !important;
+  caret-color: hsl(var(--foreground));
+}
+input:autofill:focus {
+  box-shadow: 0 0 0 1000px hsl(var(--card)) inset, 0 0 0 2px hsl(var(--ring)) !important;
+}
+
+/* =====================================================================
+   Sign-in pages (the Worker sets data-anchor-page="auth" on <html>)
+   ===================================================================== */
+
+/* Left brand panel. Breeze paints it from the Login Branding accent colour as
+   an inline style, hence !important on the background. */
+:root[data-anchor-page='auth'] :is(
+  body > div > astro-island:first-of-type > div,
+  astro-island[component-url*='AuthPanelBranding'] > div
+) {
+  position: relative;
+  color: #ECF1F8;
+  background:
+    url('/anchor-skin/anchor-watermark.svg') no-repeat right -90px bottom -70px / 460px auto,
+    radial-gradient(60% 45% at 100% 0%, hsl(42 77% 60% / 0.07), transparent 70%),
+    linear-gradient(165deg, #0E2138 0%, #0B1B30 45%, #071426 100%) !important;
+  box-shadow: inset -1px 0 0 hsl(40 50% 46% / 0.55);
+}
+
+/* Breeze first draws its own blue "Breeze" panel, then swaps in your branding
+   once it loads. Keep the panel empty until the logo arrives so the Breeze
+   version never flashes. */
+:root[data-anchor-page='auth'] :is(
+  body > div > astro-island:first-of-type > div,
+  astro-island[component-url*='AuthPanelBranding'] > div
+):not(:has(img)) > * {
+  visibility: hidden;
+}
+
+/* Logo: Breeze shows it at a fixed height that depends on the version
+   (32px in older builds). Give the lockup room to read. */
+:root[data-anchor-page='auth'] :is(
+  body > div > astro-island:first-of-type > div,
+  astro-island[component-url*='AuthPanelBranding'] > div
+) img {
+  height: 64px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* Headline in the site's hero style, with the "index mark" eyebrow above it. */
+:root[data-anchor-page='auth'] :is(
+  body > div > astro-island:first-of-type > div,
+  astro-island[component-url*='AuthPanelBranding'] > div
+) h2 {
+  font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+  font-weight: 370;
+  font-size: clamp(2.1rem, 3.3vw, 3.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  max-width: 15ch;
+  color: #ECF1F8;
+}
+:root[data-anchor-page='auth'] :is(
+  body > div > astro-island:first-of-type > div,
+  astro-island[component-url*='AuthPanelBranding'] > div
+) h2::before {
+  content: 'Locally owned \00B7  Ventura County';
+  display: block;
+  margin-bottom: 24px;
+  padding-left: 43px;
+  /* hairline sits on the first line even if the eyebrow wraps */
+  background: linear-gradient(#B0883A, #B0883A) no-repeat left 6px / 30px 1px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #E8B84B;
+}
+
+/* Footer: "© 2026" becomes "© 2026 Anchor Tech Solutions". */
+:root[data-anchor-page='auth'] :is(
+  body > div > astro-island:first-of-type > div,
+  astro-island[component-url*='AuthPanelBranding'] > div
+) > p:last-child {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: #6E7F95;
+}
+:root[data-anchor-page='auth'] :is(
+  body > div > astro-island:first-of-type > div,
+  astro-island[component-url*='AuthPanelBranding'] > div
+) > p:last-child::after {
+  content: 'Anchor Tech Solutions';
+}
+
+/* Right side: the sign-in form. */
+:root[data-anchor-page='auth'] [data-testid='login-page'] > div:first-child > p {
+  display: block;
+  padding-left: 43px;
+  background: linear-gradient(#B0883A, #B0883A) no-repeat left center / 30px 1px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+/* "Sign in to Breeze" → "Sign in to Anchor Tech RMM" (CSS can't edit the text,
+   so the original is shrunk away and the new title drawn in its place). */
+:root[data-anchor-page='auth'] h1[data-testid='login-heading'] {
+  font-size: 0;
+  margin-top: 14px;
+}
+:root[data-anchor-page='auth'] h1[data-testid='login-heading']::after {
+  content: 'Sign in to Anchor Tech RMM';
+  display: block;
+  font-size: 2.15rem;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+:root[data-anchor-page='auth'] h1 {
+  font-weight: 400;
+}
+
+:root[data-anchor-page='auth'] [data-testid='login-session-expired-notice'] {
+  border-color: hsl(40 50% 46% / 0.6);
+  background: hsl(42 77% 60% / 0.08);
+  color: hsl(var(--foreground));
+}
+
+:root[data-anchor-page='auth'] :is(input[type='email'], input[type='password'], input[type='text']) {
+  height: 46px;
+  padding-inline: 14px;
+  border-radius: 6px;
+  border-color: hsl(var(--input));
+  background-color: hsl(var(--card));
+  font-size: 15px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+:root[data-anchor-page='auth'] :is(input[type='email'], input[type='password'], input[type='text']):focus {
+  border-color: hsl(var(--ring));
+}
+
+/* Primary button as the site's gold pill, with its hover shine. */
+:root[data-anchor-page='auth'] button.bg-primary {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  height: 48px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: transform 0.25s cubic-bezier(.22,.7,.2,1), box-shadow 0.3s, opacity 0.2s;
+}
+:root[data-anchor-page='auth'] button.bg-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 0.45) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.6s cubic-bezier(.22,.7,.2,1);
+}
+:root[data-anchor-page='auth'] button.bg-primary:hover:not(:disabled) {
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px -12px hsl(var(--primary) / 0.65);
+}
+:root[data-anchor-page='auth'] button.bg-primary:hover:not(:disabled)::after {
+  transform: translateX(120%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-anchor-page='auth'] button.bg-primary,
+  :root[data-anchor-page='auth'] button.bg-primary::after {
+    transition: none;
+  }
+}
