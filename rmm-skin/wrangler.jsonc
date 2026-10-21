@@ -1,0 +1,14 @@
+{
+  // Anchor Tech skin for the Breeze RMM at rmm.anchortechvta.com.
+  // Runs in front of the Cloudflare Tunnel; see README.md.
+  "name": "anchor-rmm-skin",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-08-27",
+  "workers_dev": false,
+  "routes": [
+    { "pattern": "rmm.anchortechvta.com/*", "zone_name": "anchortechvta.com" }
+  ],
+  // Files under public/ are served at /anchor-skin/... without running the script.
+  "assets": { "directory": "./public" },
+  "observability": { "enabled": true }
+}

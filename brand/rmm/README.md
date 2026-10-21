@@ -35,7 +35,9 @@ Nothing in this folder is built or deployed by the website. The images under
   staging URL: staging is behind Cloudflare Access, so the login page couldn't
   load it.
 - **Accent color:** `#0B1B30`. This paints the login side panel in the site's navy.
-- **Headline:** `Sign in to Anchor Tech RMM`
+- **Headline:** `Technology that just works — so your business can too.`
+  (the site's hero line; with the skin installed, the form side already says
+  "Sign in to Anchor Tech RMM").
 - Save, then open the login page in a private window to check it.
 
 ### Branding tab
@@ -47,19 +49,21 @@ Nothing in this folder is built or deployed by the website. The images under
 - **Theme:** `Dark`
 - **Custom CSS:** paste all of `portal.css`.
 
-## What Breeze lets you brand, and what it doesn't
+## What the settings cover, and what the skin adds
 
-- **Branded:**
-  - the login screen (logo, navy panel, headline)
-  - the sidebar (anchor mark and company name)
+- **Breeze settings (this page):**
+  - the login panel's logo, navy background and headline
+  - the sidebar anchor mark and company name
   - invoice and proposal accents
-  - the customer portal your clients log into (colors, through `portal.css`)
-- **Not brandable from settings:**
-  - the technician dashboard's own colors and fonts (it keeps Breeze's own theme; its dark mode is the closest match to the site)
-  - the browser tab icon
-  - the three feature bullets on the login panel
+  - the customer portal your clients log into (through `portal.css`)
+- **The skin (`rmm-skin/`, a Cloudflare Worker):**
+  - everything else in the technician app: navy and gold colours, Fraunces
+    headings, Inter text, the gold pill sign-in button, a bigger login logo
+  - the browser tab icon and title
+  - "Sign in to Anchor Tech RMM" in place of "Sign in to Breeze"
 
-  Changing these would mean patching Breeze's code, which every update would undo.
+  It works at the Cloudflare edge, so Breeze itself is never patched and
+  updates can't undo it. See `rmm-skin/README.md` to deploy or turn it off.
 - `portal.css` forces the portal into the site's dark navy whatever the
   visitor's OS setting. Check a couple of portal pages with a test client after
   pasting it. To undo it, clear the Custom CSS field.
