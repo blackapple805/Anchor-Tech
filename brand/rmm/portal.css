@@ -1,0 +1,65 @@
+/*
+  Anchor Tech RMM: customer portal theme
+  --------------------------------------
+  Paste this whole file into Breeze → Partner Settings → Branding → Custom CSS.
+  Breeze injects it into the customer portal (the site your clients log into)
+  after its own stylesheet, so these values replace the default
+  "plaster and spruce" palette with the anchortechvta.com navy and gold.
+
+  Colours come straight from the site's src/index.css tokens. Breeze stores
+  colours as bare HSL triplets ("H S% L%"), so each one is noted with its hex.
+
+  The site is dark-only, so the portal is forced dark too, whatever the
+  visitor's OS setting. `!important` lets this one block win over Breeze's
+  light, dark, OS-dark and "chrome accent" variants without copying each one.
+*/
+:root,
+.dark {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --background: 214 63% 12% !important;          /* #0B1B30 navy (site page bg) */
+  --foreground: 215 46% 95% !important;          /* #ECF1F8 ink */
+  --card: 214 58% 17% !important;                /* #122844 card */
+  --card-foreground: 215 46% 95% !important;
+  --popover: 213 60% 14% !important;             /* #0E2138 paper-2 */
+  --popover-foreground: 215 46% 95% !important;
+
+  /* Brand: gold buttons and links, dark text on gold (10:1) */
+  --primary: 42 77% 60% !important;              /* #E8B84B gold */
+  --primary-foreground: 215 69% 9% !important;   /* #071426 */
+  --primary-on-tint: 42 82% 68% !important;      /* #F0C96B gold, lifted for tinted washes */
+  --ring: 42 77% 60% !important;
+
+  /* Invoices and proposals print on white paper: keep their accent navy */
+  --paper-primary: 214 63% 12% !important;
+
+  /* Quiet fills */
+  --secondary: 215 45% 20% !important;           /* #1C2F49 accent-soft */
+  --secondary-foreground: 215 46% 95% !important;
+  --muted: 215 45% 20% !important;
+  --muted-foreground: 214 21% 65% !important;    /* #93A3B8 muted (6.7:1 on navy) */
+  --accent: 215 45% 20% !important;
+  --accent-foreground: 215 46% 95% !important;
+
+  /* Hairlines (#2C435F, 1.7:1 on navy, above Breeze's 1.4:1 floor) */
+  --border: 213 37% 27% !important;
+  --input: 213 34% 32% !important;
+
+  /* Status colours for a dark surface. Warning is pushed toward orange so it
+     never reads as the gold brand colour. */
+  --success: 152 38% 58% !important;
+  --success-foreground: 150 60% 8% !important;
+  --success-on-tint: 152 42% 68% !important;
+  --warning: 28 88% 60% !important;
+  --warning-foreground: 28 90% 10% !important;
+  --warning-on-tint: 28 85% 70% !important;
+  --destructive: 8 58% 44% !important;
+  --destructive-foreground: 42 45% 98% !important;
+  --destructive-on-tint: 8 75% 74% !important;
+}
+
+/* The site's bronze rule under the header (#B0883A at 85%). */
+.portal-header {
+  border-bottom-color: hsl(40 50% 46% / 0.85) !important;
+}
