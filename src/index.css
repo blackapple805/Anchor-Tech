@@ -20,7 +20,7 @@
 @font-face {
   font-family: 'Fraunces';
   font-style: italic;
-  font-weight: 300 500;
+  font-weight: 300 500;  -webkit-font-smoothing: antialiased;
   font-display: swap;
   src: url('./assets/fonts/fraunces-italic-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
@@ -94,6 +94,10 @@
   --gutter: clamp(22px, 6vw, 96px);
   --ease: cubic-bezier(.22,.7,.2,1);
   --header-h: 78px;
+  /* Full rendered header height including the iOS safe-area padding-top the
+     fixed .site-header adds. env() is 0 without viewport-fit=cover / on desktop,
+     so this collapses to --header-h and desktop layout is unchanged. */
+  --header-total: calc(var(--header-h) + env(safe-area-inset-top, 0px));
 
   /* ---- NEW named tokens (no inline magic values) ---- */
   /* 3-tier vertical rhythm scale */
@@ -113,7 +117,7 @@
 }
 
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-behavior: smooth; }
 body {
   margin: 0;
   background: var(--paper);
@@ -121,11 +125,14 @@ body {
   font-family: var(--grotesk);
   font-size: 18px;
   line-height: 1.72;
+  /* No standard equivalent: unprefixed `font-smooth` is non-standard and has no
+     effect in any browser, so the working prefixed form is kept as-is. */
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
-img { max-width: 100%; display: block; }
+img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; text-decoration: none; }
 ul { list-style: none; margin: 0; padding: 0; }
 h1,h2,h3,h4 { margin: 0; font-family: var(--serif); font-weight: 400; line-height: 1.04; letter-spacing: -.018em; color: var(--gold); overflow-wrap: break-word; }
@@ -135,14 +142,6 @@ button { font-family: inherit; }
 
 /* Global visible focus — accent ring, applied site-wide */
 :focus-visible { outline: none; box-shadow: var(--focus-ring); border-radius: 3px; }
-
-/* ---- Grain overlay ---- */
-body::after {
-  content: "";
-  position: fixed; inset: 0; z-index: 9000; pointer-events: none;
-  opacity: .05; mix-blend-mode: screen;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
 
 /* ---- Layout ---- */
 .wrap { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
@@ -232,25 +231,21 @@ em, .it { font-style: italic; }
 /* ---- Header ---- */
 .site-header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: color-mix(in srgb, var(--paper) 82%, transparent);
-  backdrop-filter: blur(14px) saturate(120%);
+  /* background-color (not the shorthand) lives ON the fixed element itself.
+     iOS 26 Safari tints the status-bar strip by sampling background-color /
+     backdrop-filter of fixed elements near the top edge — and it reads the
+     element, NOT pseudo-elements. Moving the glass onto ::before left Safari
+     nothing to sample, so the strip went untinted after scroll. Opaque navy
+     keeps the header and page in sync and needs no blur. */
+  background-color: var(--paper);
   border-bottom: 1px solid var(--line);
-  /* Entry animation plays once on first load only. It is intentionally NOT
-     applied here so a resize/repaint can never replay it (that replay was the
-     "navbar elevates, disappears, then recovers" glitch). The .is-loaded class
-     is added once on mount; resize never touches it. */
-  transform: translateY(0);
+  padding-top: env(safe-area-inset-top, 0px);
 }
+
 .site-header.is-loaded {
-  animation: headerDropIn .7s var(--ease) both;
+  animation: headerDropIn .7s var(--ease) backwards;
 }
-/* While the window is actively being resized, hard-freeze the header so no
-   transition or animation can fire mid-drag. */
-body.is-resizing .site-header,
-body.is-resizing .site-header * {
-  animation: none !important;
-  transition: none !important;
-}
+
 @keyframes headerDropIn {
   from { opacity: 0; transform: translateY(-100%); }
   to { opacity: 1; transform: translateY(0); }
@@ -258,13 +253,22 @@ body.is-resizing .site-header * {
 @media (prefers-reduced-motion: reduce) {
   .site-header.is-loaded { animation: none; }
 }
-.site-header .nav { display: flex; align-items: center; height: var(--header-h); gap: 28px; }
+/* Three-column grid: logo left, nav links optically centered against the
+   viewport, CTA right. grid-template-columns 1fr auto 1fr centers the middle
+   column on the container midline (which coincides with the viewport midline,
+   since .wrap is margin-inline:auto), so it never drifts when the logo and CTA
+   differ in width the way a flex space-between would. */
+.site-header .nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: var(--header-h); gap: 28px; }
 .brand { display: inline-flex; align-items: center; gap: 12px; margin-right: auto; }
 .brand .mark { width: 34px; height: 34px; flex: none; }
-.brand .name { font-family: var(--serif); font-size: 21px; line-height: 1; letter-spacing: -.02em; color: var(--ink); display: flex; flex-direction: column; gap: 3px; }
+.brand .name { font-family: var(--serif); font-size: 21px; line-height: 1; letter-spacing: -.02em; color: var(--ink); display: flex; flex-direction: column; gap: 3px; white-space: nowrap; }
 .brand .name span { font-family: var(--grotesk); font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--muted-2); }
 
-.nav-links { display: flex; align-items: center; gap: 30px; }
+/* grid-column pins the links to the center track. It is explicit (not left to
+   auto-placement) so that at <=760px, where .nav-links becomes position:fixed
+   and leaves the grid flow, the CTA/hamburger still lands in column 3 instead
+   of sliding into the vacated middle cell. */
+.nav-links { display: flex; align-items: center; gap: 30px; grid-column: 2; }
 .nav-links a:not(.btn) {
   font-family: var(--grotesk); font-size: 14.5px; font-weight: 500; color: var(--ink-2);
   position: relative; padding: 4px 0; transition: color .25s;
@@ -276,15 +280,30 @@ body.is-resizing .site-header * {
 .nav-links a:not(.btn).active::after { width: 100%; }
 .nav-links .m-cta { display: none; }
 
-.nav-cta { display: flex; align-items: center; gap: 18px; }
+.nav-cta { display: flex; align-items: center; gap: 18px; grid-column: 3; justify-self: end; }
 .nav-phone { display: inline-flex; align-items: center; gap: 9px; font-family: var(--grotesk); font-size: 14.5px; font-weight: 500; color: var(--ink); transition: color .25s; }
 .nav-phone svg { width: 16px; height: 16px; color: var(--accent); }
 .nav-phone:hover { color: var(--accent); }
 .nav-toggle { display: none; background: none; border: 0; cursor: pointer; color: var(--ink); padding: 6px; }
-.nav-toggle svg { width: 26px; height: 26px; }
+/* Hamburger -> X. The three bars sit at fixed top/50%/bottom positions and only
+   ever animate transform + opacity (never width/height/margin/top), so morphing
+   to the X never triggers layout. Transforms live on the bars, which are
+   descendants of the fixed header — not on any of its ancestors. */
+.nav-toggle-bars { position: relative; display: block; width: 26px; height: 18px; }
+.nav-toggle-bars span {
+  position: absolute; left: 0; width: 100%; height: 2px;
+  background: currentColor; border-radius: 2px;
+  transition: transform .3s var(--ease), opacity .3s var(--ease);
+}
+.nav-toggle-bars span:nth-child(1) { top: 0; }
+.nav-toggle-bars span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+.nav-toggle-bars span:nth-child(3) { bottom: 0; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(2) { opacity: 0; transform: translateY(-50%) scaleX(0); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
 /* ---- Page hero (interior pages) — shared anatomy ---- */
-.page-hero { padding-top: calc(var(--header-h) + clamp(58px, 9vw, 116px)); padding-bottom: clamp(44px, 7vw, 84px); border-bottom: 1px solid var(--line); position: relative; }
+.page-hero { padding-top: calc(var(--header-total) + clamp(58px, 9vw, 116px)); padding-bottom: clamp(44px, 7vw, 84px); border-bottom: 1px solid var(--line); position: relative; }
 .page-hero .wrap { position: relative; }
 .page-hero h1 { font-size: clamp(2.6rem, 6.5vw, 5.2rem); font-weight: 370; letter-spacing: -.03em; line-height: .98; max-width: 18ch; margin-top: 6px; }
 .page-hero > .wrap > p { font-family: var(--grotesk); font-size: clamp(16px, 1.6vw, 19px); color: var(--body-text); line-height: 1.7; max-width: 58ch; margin-top: 24px; }
@@ -297,7 +316,7 @@ body.is-resizing .site-header * {
 .crumbs span { color: var(--ink-2); }
 
 /* ---- Home hero ---- */
-.hero { padding-top: calc(var(--header-h) + clamp(52px, 9vw, 104px)); padding-bottom: clamp(44px, 7vw, 88px); position: relative; }
+.hero { padding-top: calc(var(--header-total) + clamp(52px, 9vw, 104px)); padding-bottom: clamp(44px, 7vw, 88px); position: relative; }
 .hero-grid { display: grid; grid-template-columns: 1.08fr .92fr; gap: clamp(40px, 6vw, 88px); align-items: center; }
 .hero-copy .eyebrow { margin-bottom: 20px; }
 .hero-copy h1 { font-size: clamp(2.7rem, 5.6vw, 4.9rem); font-weight: 370; letter-spacing: -.03em; line-height: .98; }
@@ -627,7 +646,7 @@ body.is-resizing .site-header * {
 .hours-row.emph b { color: var(--accent); }
 
 /* ---- Footer ---- */
-.site-footer { background: var(--dark); color: var(--cream-on-dark); padding-top: clamp(60px, 8vw, 96px); border-top: 1px solid var(--line); }
+.site-footer { background: var(--dark); color: var(--cream-on-dark); padding-top: clamp(60px, 8vw, 96px); padding-bottom: env(safe-area-inset-bottom, 0px); border-top: 1px solid var(--line); }
 .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.4fr; gap: 40px; padding-bottom: clamp(40px, 5vw, 60px); }
 .site-footer .brand .name { color: var(--cream-on-dark); }
 .footer-about { font-family: var(--grotesk); font-size: 15px; color: #A7AFBC; line-height: 1.7; max-width: 32ch; margin-top: 20px; }
@@ -794,7 +813,8 @@ body.is-resizing .site-header * {
 /* ---- Responsive ---- */
 @media (max-width: 1000px) {
   .hero-grid { grid-template-columns: 1fr; gap: 44px; }
-  .hero-visual { max-width: 520px; }
+  .hero-visual { max-width: 520px; aspect-ratio: 16/10; }
+  .hero-slot { aspect-ratio: 16/10; }
   .hero-badge--tl { left: 0; }
   .hero-badge--br { right: 0; }
   .head-split { grid-template-columns: 1fr; gap: 24px; align-items: start; }
@@ -819,23 +839,41 @@ body.is-resizing .site-header * {
   .nav-cta { gap: 14px; }
   .nav-phone { display: none; }
 }
+@media (max-width: 760px) {
+  :root { --header-h: 62px; }
+}
 
 @media (max-width: 760px) {
   .nav-cta .nav-phone, .nav-cta > .btn { display: none; }
   .nav-toggle { display: inline-grid; place-items: center; }
+  /* Mobile header: logo flush-left at the wrap's left padding, hamburger right.
+     Two-column grid (auto 1fr): brand in the auto track (first item, no gap
+     before it, so its left edge is the wrap's padding-inline just like the
+     pre-Task-1 flex layout), .nav-cta in the 1fr track pushed right by its
+     inherited justify-self:end. The desktop 1fr auto 1fr grid (>=760px) is
+     untouched. */
+  .site-header .nav { grid-template-columns: auto 1fr; }
+  .brand { grid-column: 1; margin-right: 0; }
+  .nav-cta { grid-column: 2; }
   .nav-links {
-    position: fixed; inset: var(--header-h) 0 auto 0;
+    position: fixed; inset: var(--header-total) 0 auto 0;
     flex-direction: column; align-items: stretch; gap: 0;
     background: var(--paper); border-bottom: 1px solid var(--line);
     padding: 10px var(--gutter) 26px;
-    /* ease-out (no overshoot) so the panel settles cleanly instead of
-       bouncing back when the slide-in finishes */
-    transform: translateY(-130%); opacity: 0;
-    transition: transform .42s cubic-bezier(.32,.72,0,1), opacity .3s ease;
-    max-height: calc(100vh - var(--header-h)); overflow-y: auto;
-    will-change: transform;
+    /* Closed: fade + a small lift only (no big slide), then flip visibility off
+       so the panel is neither interactive nor focusable while hidden. Inset is
+       unchanged and it stays a header-anchored strip, not a full-viewport
+       overlay. visibility is delayed to the end of the fade so it can animate
+       out before disappearing. */
+    transform: translateY(-8px); opacity: 0; visibility: hidden;
+    transition: transform .32s var(--ease), opacity .28s ease, visibility 0s linear .32s;
+    max-height: calc(100dvh - var(--header-total)); overflow-y: auto;
+    will-change: transform, opacity;
   }
-  .nav-links.open { transform: none; opacity: 1; }
+  .nav-links.open {
+    transform: none; opacity: 1; visibility: visible;
+    transition: transform .32s var(--ease), opacity .28s ease, visibility 0s;
+  }
   .nav-links a:not(.btn) { font-size: 17px; padding: 15px 0; border-bottom: 1px solid var(--line); }
   .nav-links a:not(.btn)::after { display: none; }
   .nav-links .m-cta { display: inline-flex; margin-top: 18px; }
@@ -896,6 +934,15 @@ body.is-resizing .site-header * {
   .cta-band p { margin-left: auto; margin-right: auto; }
 }
 
+/* Respect reduced-motion: drop the hamburger morph and the mobile panel
+   entrance to instant. Placed after the rules above (and matching .nav-links.open
+   at equal specificity) so it wins the cascade. */
+@media (prefers-reduced-motion: reduce) {
+  .nav-toggle-bars span,
+  .nav-links,
+  .nav-links.open { transition: none; }
+}
+
 @media (max-width: 540px) {
   body { font-size: 17px; }
   .feature-grid { grid-template-columns: 1fr; }
@@ -928,4 +975,22 @@ body.is-resizing .site-header * {
   .page-hero--split .hero-rail .rail-chips { justify-content: flex-start; }
   .split-callout { text-align: left; }
   .coverage-card { text-align: left; }
+}
+
+/* ---- Contact email CTA on phones ----
+   This button's label is the full address ("Email eric@anchortechvta.com") —
+   far longer than any other CTA. On narrow phones the browser wrapped it
+   mid-address, stranding a single character on its own line. Shrink the type
+   and side padding so the whole string fits the card, THEN forbid wrapping so
+   a character can never be orphaned (nowrap alone would have overflowed).
+   Measured to stay on one line without exceeding the card at 320px; the 430px
+   ceiling also covers the iPhone 16 Pro (402px) where the full-size label still
+   wrapped. Scoped to .btn--email, so other CTAs are untouched. */
+@media (max-width: 430px) {
+  .btn--email {
+    padding: 13px 14px;
+    font-size: 12px;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
 }

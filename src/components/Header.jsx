@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Anchor, Menu, X } from './icons.jsx';
+import { Anchor } from './icons.jsx';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -25,23 +25,6 @@ export default function Header() {
   useEffect(() => {
     const id = requestAnimationFrame(() => setLoaded(true));
     return () => cancelAnimationFrame(id);
-  }, []);
-
-  useEffect(() => {
-    let resizeTimer;
-    const onResize = () => {
-      document.body.classList.add('is-resizing');
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        document.body.classList.remove('is-resizing');
-      }, 200);
-    };
-    window.addEventListener('resize', onResize);
-    return () => {
-      window.removeEventListener('resize', onResize);
-      clearTimeout(resizeTimer);
-      document.body.classList.remove('is-resizing');
-    };
   }, []);
 
   return (
@@ -91,7 +74,13 @@ export default function Header() {
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
           >
-            {open ? <X /> : <Menu />}
+            {/* Three bars morph to an X purely in CSS off aria-expanded; the
+                open/close state and JS below are unchanged. */}
+            <span className="nav-toggle-bars" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
           </button>
         </div>
       </div>
