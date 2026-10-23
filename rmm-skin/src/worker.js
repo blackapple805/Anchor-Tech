@@ -2,8 +2,9 @@
 // Anchor Tech skin for Breeze RMM.
 //
 // Sits on rmm.anchortechvta.com/* in front of the Cloudflare Tunnel. Every
-// request goes to Breeze unchanged; HTML pages get one extra stylesheet, the
-// anchor favicon and an "Anchor Tech RMM" tab title on the way back. Breeze
+// request goes to Breeze unchanged; HTML pages get one extra stylesheet, a
+// small same-origin script (viewer-link.js), the anchor favicon and an
+// "Anchor Tech RMM" tab title on the way back. Breeze
 // itself is never modified, so its updates can't undo the branding.
 //
 // The stylesheet, fonts and images live in ../public/anchor-skin/ and are
@@ -11,6 +12,9 @@
 
 const SKIN_CSS = '/anchor-skin/skin.css';
 const FAVICON = '/anchor-skin/favicon.svg';
+// Points "Connect Desktop" at the internal Breeze address so the viewer app
+// isn't stopped by Cloudflare Access (see public/anchor-skin/viewer-link.js).
+const VIEWER_LINK_JS = '/anchor-skin/viewer-link.js';
 
 // Pages that use Breeze's two-panel sign-in layout. The stylesheet only
 // restyles that layout when <html data-anchor-page="auth"> is set.
@@ -38,6 +42,7 @@ export default {
       .on('head', {
         element(el) {
           el.append(`<link rel="stylesheet" href="${SKIN_CSS}">`, { html: true });
+          el.append(`<script src="${VIEWER_LINK_JS}" defer></script>`, { html: true });
         },
       })
       .on('link[rel~="icon"]', {
