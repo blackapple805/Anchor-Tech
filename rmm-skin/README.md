@@ -38,6 +38,48 @@ browser ─▶ Cloudflare Access ─▶ this Worker ─▶ Cloudflare Tunnel ─
 | `public/anchor-skin/anchor-watermark.svg` | Faint anchor behind the sign-in panel |
 | `public/anchor-skin/viewer-link.js` | Makes **Connect Desktop** open Breeze Viewer against `https://breeze.home.arpa` instead of this Access-protected hostname |
 | `wrangler.jsonc` | Worker name and the `rmm.anchortechvta.com/*` route |
+| `scripts/check-breeze.mjs` | Checks a Breeze release against everything the skin relies on |
+| `breeze-compat.json` | What the skin relies on, and which Breeze colours are left stock on purpose |
+| `../.github/workflows/rmm-skin-breeze-check.yml` | Runs that check every Monday and opens an issue when a release needs skin changes |
+
+## Keeping up with Breeze updates
+
+The skin is built so most Breeze updates need nothing:
+
+- **Theme colours.** It sets Breeze's own colour tokens (`--primary`,
+  `--card`, …), so new screens pick up the navy and gold automatically.
+- **Breeze's stock blues.** Some Breeze screens skip the tokens and use
+  Tailwind's blue, sky and indigo directly. The skin retunes those three
+  scales to the harbour blues, so new screens using them match too.
+- **Sign-in pages.** The two-panel sign-in layout is recognised by its
+  panel, not just its URL, so a new sign-in page Breeze adds is styled
+  anyway. The single-card pages (forgot password, invites, verification)
+  get the anchor tile and "Anchor Tech RMM" instead of Breeze's wave and name.
+
+What can still break is a rule that targets specific Breeze markup (a
+`data-testid`, a layout) when Breeze changes it. `scripts/check-breeze.mjs`
+looks for exactly that, plus new theme colours, new colour families and new
+sign-in pages, and tells you what to fix.
+
+### Before each Breeze upgrade
+
+From the repo on your desktop (needs Node 18+ and git):
+
+```bash
+node rmm-skin/scripts/check-breeze.mjs 0.125.0   # the version you're about to install
+```
+
+- **PASS:** upgrade Breeze as usual. Nothing in the skin needs to change.
+- **FAIL:** each line says what changed and where to fix it. Fix it, deploy
+  the skin, then upgrade Breeze. Set `testedWith` in `breeze-compat.json` to
+  the new version once you've looked it over.
+
+Leave the version off to check Breeze's latest release. The same check runs
+on GitHub every Monday (once this is merged to `main`) and opens one issue,
+"RMM skin needs updating for a new Breeze release", when something needs
+attention. It closes the issue itself once the skin covers the latest release
+again. You can also run it any time from **Actions → RMM skin vs Breeze → Run
+workflow**.
 
 ## Deploy
 
