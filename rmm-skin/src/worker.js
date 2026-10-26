@@ -16,9 +16,11 @@ const FAVICON = '/anchor-skin/favicon.svg';
 // isn't stopped by Cloudflare Access (see public/anchor-skin/viewer-link.js).
 const VIEWER_LINK_JS = '/anchor-skin/viewer-link.js';
 
-// Pages that use Breeze's two-panel sign-in layout. The stylesheet only
-// restyles that layout when <html data-anchor-page="auth"> is set.
-const AUTH_PAGE = /^\/(login|forgot-password|reset-password|register-partner|accept-invite|invite|mfa)(\/|$)/;
+// Pages built on Breeze's sign-in layouts (the two-panel AuthShellBranded and
+// the centred AuthLayout). The stylesheet restyles them when
+// <html data-anchor-page="auth"> is set. scripts/check-breeze.mjs lists every
+// such page in a Breeze release and fails if one isn't matched here.
+const AUTH_PAGE = /^\/(login|auth|forgot-password|reset-password|register-partner|accept-invite|invite|mfa|verify|quick|oauth\/consent)(\/|$)/;
 
 export default {
   async fetch(request, env, ctx) {

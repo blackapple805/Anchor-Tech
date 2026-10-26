@@ -93,6 +93,60 @@
   --ring: 42 77% 60%;
 }
 
+/* ---------- Breeze's raw blue palette, retuned to the harbour blues ----------
+   Most of Breeze reads the theme colours above, but some screens use Tailwind's
+   stock blues directly (bg-blue-600 buttons, text-blue-600 links, sky "info"
+   chips, indigo accents) — about 790 places in 0.124, and every release adds
+   more. Tailwind 4 turns each of those into var(--color-blue-600) etc., so
+   redefining the scales here repaints all of them, including screens Breeze
+   hasn't shipped yet.
+
+   Each step keeps Tailwind's lightness, so text and button contrast stays
+   within a few percent of stock Breeze in both light and dark mode; only the
+   electric chroma is pulled back and the hue moved onto the navy/harbour
+   family (OKLCH hue 255, the same as #0B1B30). Blue, sky and indigo stay on
+   separate hues so charts and severity badges that pair them stay
+   distinguishable. Amber, red, green, orange and purple are left alone: they
+   carry warning/error/success/category meaning. */
+:root {
+  /* blue -> harbour */
+  --color-blue-50: oklch(97.0% 0.007 255);
+  --color-blue-100: oklch(93.2% 0.016 255);
+  --color-blue-200: oklch(88.2% 0.029 255);
+  --color-blue-300: oklch(80.9% 0.052 255);
+  --color-blue-400: oklch(70.7% 0.083 255);
+  --color-blue-500: oklch(62.3% 0.105 255);
+  --color-blue-600: oklch(54.6% 0.105 255);
+  --color-blue-700: oklch(48.8% 0.105 255);
+  --color-blue-800: oklch(42.4% 0.100 255);
+  --color-blue-900: oklch(37.9% 0.073 255);
+  --color-blue-950: oklch(28.2% 0.045 255);
+  /* indigo -> dusk */
+  --color-indigo-50: oklch(96.2% 0.009 272);
+  --color-indigo-100: oklch(93.0% 0.017 272);
+  --color-indigo-200: oklch(87.0% 0.033 272);
+  --color-indigo-300: oklch(78.5% 0.058 272);
+  --color-indigo-400: oklch(67.3% 0.091 272);
+  --color-indigo-500: oklch(58.5% 0.110 272);
+  --color-indigo-600: oklch(51.1% 0.110 272);
+  --color-indigo-700: oklch(45.7% 0.110 272);
+  --color-indigo-800: oklch(39.8% 0.098 272);
+  --color-indigo-900: oklch(35.9% 0.072 272);
+  --color-indigo-950: oklch(25.7% 0.045 272);
+  /* sky -> sea */
+  --color-sky-50: oklch(97.7% 0.008 236);
+  --color-sky-100: oklch(95.1% 0.016 236);
+  --color-sky-200: oklch(90.1% 0.035 236);
+  --color-sky-300: oklch(82.8% 0.067 236);
+  --color-sky-400: oklch(74.6% 0.096 236);
+  --color-sky-500: oklch(68.5% 0.100 236);
+  --color-sky-600: oklch(58.8% 0.095 236);
+  --color-sky-700: oklch(50.0% 0.080 236);
+  --color-sky-800: oklch(44.3% 0.066 236);
+  --color-sky-900: oklch(39.1% 0.054 236);
+  --color-sky-950: oklch(29.3% 0.040 236);
+}
+
 ::selection { background: hsl(42 77% 60% / 0.32); }
 
 /* Page titles in the site's serif. */
@@ -129,12 +183,16 @@ input:autofill:focus {
 }
 
 /* =====================================================================
-   Sign-in pages (the Worker sets data-anchor-page="auth" on <html>)
+   Sign-in pages
+   The Worker marks them with <html data-anchor-page="auth"> by URL. Pages
+   with Breeze's branded sign-in panel are also recognised by the panel
+   itself, so a sign-in page Breeze adds later is styled even before the
+   Worker's URL list knows about it.
    ===================================================================== */
 
 /* Left brand panel. Breeze paints it from the Login Branding accent colour as
    an inline style, hence !important on the background. */
-:root[data-anchor-page='auth'] :is(
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) :is(
   body > div > astro-island:first-of-type > div,
   astro-island[component-url*='AuthPanelBranding'] > div
 ) {
@@ -150,7 +208,7 @@ input:autofill:focus {
 /* Breeze first draws its own blue "Breeze" panel, then swaps in your branding
    once it loads. Keep the panel empty until the logo arrives so the Breeze
    version never flashes. */
-:root[data-anchor-page='auth'] :is(
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) :is(
   body > div > astro-island:first-of-type > div,
   astro-island[component-url*='AuthPanelBranding'] > div
 ):not(:has(img)) > * {
@@ -159,7 +217,7 @@ input:autofill:focus {
 
 /* Logo: Breeze shows it at a fixed height that depends on the version
    (32px in older builds). Give the lockup room to read. */
-:root[data-anchor-page='auth'] :is(
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) :is(
   body > div > astro-island:first-of-type > div,
   astro-island[component-url*='AuthPanelBranding'] > div
 ) img {
@@ -170,7 +228,7 @@ input:autofill:focus {
 }
 
 /* Headline in the site's hero style, with the "index mark" eyebrow above it. */
-:root[data-anchor-page='auth'] :is(
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) :is(
   body > div > astro-island:first-of-type > div,
   astro-island[component-url*='AuthPanelBranding'] > div
 ) h2 {
@@ -182,7 +240,7 @@ input:autofill:focus {
   max-width: 15ch;
   color: #ECF1F8;
 }
-:root[data-anchor-page='auth'] :is(
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) :is(
   body > div > astro-island:first-of-type > div,
   astro-island[component-url*='AuthPanelBranding'] > div
 ) h2::before {
@@ -202,7 +260,7 @@ input:autofill:focus {
 }
 
 /* Footer: "© 2026" becomes "© 2026 Anchor Tech Solutions". */
-:root[data-anchor-page='auth'] :is(
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) :is(
   body > div > astro-island:first-of-type > div,
   astro-island[component-url*='AuthPanelBranding'] > div
 ) > p:last-child {
@@ -210,7 +268,7 @@ input:autofill:focus {
   letter-spacing: 0.04em;
   color: #6E7F95;
 }
-:root[data-anchor-page='auth'] :is(
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) :is(
   body > div > astro-island:first-of-type > div,
   astro-island[component-url*='AuthPanelBranding'] > div
 ) > p:last-child::after {
@@ -218,7 +276,7 @@ input:autofill:focus {
 }
 
 /* Right side: the sign-in form. */
-:root[data-anchor-page='auth'] [data-testid='login-page'] > div:first-child > p {
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) [data-testid='login-page'] > div:first-child > p {
   display: block;
   padding-left: 43px;
   background: linear-gradient(#B0883A, #B0883A) no-repeat left center / 30px 1px;
@@ -231,28 +289,53 @@ input:autofill:focus {
 
 /* "Sign in to Breeze" → "Sign in to Anchor Tech RMM" (CSS can't edit the text,
    so the original is shrunk away and the new title drawn in its place). */
-:root[data-anchor-page='auth'] h1[data-testid='login-heading'] {
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) h1[data-testid='login-heading'] {
   font-size: 0;
   margin-top: 14px;
 }
-:root[data-anchor-page='auth'] h1[data-testid='login-heading']::after {
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) h1[data-testid='login-heading']::after {
   content: 'Sign in to Anchor Tech RMM';
   display: block;
   font-size: 2.15rem;
   line-height: 1.08;
   letter-spacing: -0.025em;
 }
-:root[data-anchor-page='auth'] h1 {
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) h1 {
   font-weight: 400;
 }
 
-:root[data-anchor-page='auth'] [data-testid='login-session-expired-notice'] {
+/* Single-card sign-in pages (forgot/reset password, invites, email and MFA
+   verification, OAuth consent) use Breeze's centred AuthLayout, which shows
+   Breeze's wave mark and the word "Breeze" above the form. Swap in the anchor
+   tile and the RMM's name. `body > div > div.max-w-md` only exists in that
+   layout; the two-panel login page nests its form one level deeper. */
+:root[data-anchor-page='auth'] body > div > div.max-w-md > div.text-center:first-child > div:first-child {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: url('/anchor-skin/favicon.svg') center / cover no-repeat;
+}
+:root[data-anchor-page='auth'] body > div > div.max-w-md > div.text-center:first-child > div:first-child > svg {
+  visibility: hidden;
+}
+:root[data-anchor-page='auth'] body > div > div.max-w-md > div.text-center:first-child > h1 {
+  font-size: 0;
+  margin-top: 16px;
+}
+:root[data-anchor-page='auth'] body > div > div.max-w-md > div.text-center:first-child > h1::after {
+  content: 'Anchor Tech RMM';
+  font-size: 1.75rem;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) [data-testid='login-session-expired-notice'] {
   border-color: hsl(40 50% 46% / 0.6);
   background: hsl(42 77% 60% / 0.08);
   color: hsl(var(--foreground));
 }
 
-:root[data-anchor-page='auth'] :is(input[type='email'], input[type='password'], input[type='text']) {
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) :is(input[type='email'], input[type='password'], input[type='text']) {
   height: 46px;
   padding-inline: 14px;
   border-radius: 6px;
@@ -261,12 +344,12 @@ input:autofill:focus {
   font-size: 15px;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-:root[data-anchor-page='auth'] :is(input[type='email'], input[type='password'], input[type='text']):focus {
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) :is(input[type='email'], input[type='password'], input[type='text']):focus {
   border-color: hsl(var(--ring));
 }
 
 /* Primary button as the site's gold pill, with its hover shine. */
-:root[data-anchor-page='auth'] button.bg-primary {
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) button.bg-primary {
   position: relative;
   overflow: hidden;
   isolation: isolate;
@@ -277,7 +360,7 @@ input:autofill:focus {
   letter-spacing: 0.01em;
   transition: transform 0.25s cubic-bezier(.22,.7,.2,1), box-shadow 0.3s, opacity 0.2s;
 }
-:root[data-anchor-page='auth'] button.bg-primary::after {
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) button.bg-primary::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -287,18 +370,18 @@ input:autofill:focus {
   transform: translateX(-120%);
   transition: transform 0.6s cubic-bezier(.22,.7,.2,1);
 }
-:root[data-anchor-page='auth'] button.bg-primary:hover:not(:disabled) {
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) button.bg-primary:hover:not(:disabled) {
   opacity: 1;
   transform: translateY(-2px);
   box-shadow: 0 12px 26px -12px hsl(var(--primary) / 0.65);
 }
-:root[data-anchor-page='auth'] button.bg-primary:hover:not(:disabled)::after {
+:root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) button.bg-primary:hover:not(:disabled)::after {
   transform: translateX(120%);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root[data-anchor-page='auth'] button.bg-primary,
-  :root[data-anchor-page='auth'] button.bg-primary::after {
+  :root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) button.bg-primary,
+  :root:is([data-anchor-page='auth'], :has(astro-island[component-url*='AuthPanelBranding'])) button.bg-primary::after {
     transition: none;
   }
 }

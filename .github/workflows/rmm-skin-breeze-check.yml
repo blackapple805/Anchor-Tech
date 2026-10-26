@@ -1,0 +1,70 @@
+# Checks each new Breeze release against what the RMM skin (rmm-skin/)
+# depends on. Runs weekly, on demand, and whenever rmm-skin/ changes.
+# When a release needs skin changes, it opens (or updates) one issue with the
+# checklist; when the skin covers the latest release again, it closes it.
+# Scheduled runs only happen once this file is on the default branch (main).
+name: RMM skin vs Breeze
+
+on:
+  schedule:
+    - cron: '17 15 * * 1' # Mondays, 8:17 AM Pacific (PDT)
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Breeze version to check (e.g. 0.124.0), or "latest"'
+        default: latest
+  push:
+    paths: ['rmm-skin/**', '.github/workflows/rmm-skin-breeze-check.yml']
+  pull_request:
+    paths: ['rmm-skin/**', '.github/workflows/rmm-skin-breeze-check.yml']
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Check the skin against Breeze
+        id: check
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version || 'latest' }}
+        run: |
+          set +e
+          node rmm-skin/scripts/check-breeze.mjs "$VERSION" --report report.md
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Open, update or close the tracking issue
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CODE: ${{ steps.check.outputs.code }}
+        run: |
+          title='RMM skin needs updating for a new Breeze release'
+          existing=$(gh issue list --state open --search "\"$title\" in:title" --json number --jq '.[0].number')
+          if [ "$CODE" = "1" ]; then
+            if [ -n "$existing" ]; then
+              gh issue edit "$existing" --body-file report.md
+              gh issue comment "$existing" --body "Re-checked on $(date -u +%F): still needs attention (see the updated checklist above)."
+            else
+              gh issue create --title "$title" --body-file report.md
+            fi
+          elif [ "$CODE" = "0" ] && [ -n "$existing" ]; then
+            gh issue close "$existing" --comment "$(head -n 1 report.md | sed 's/^## //')"
+          fi
+
+      - name: Show the result on the run's summary page
+        if: always()
+        run: '[ -f report.md ] && cat report.md >> "$GITHUB_STEP_SUMMARY" || true'
+
+      - name: Fail if the skin needs attention
+        if: steps.check.outputs.code != '0'
+        run: exit 1
