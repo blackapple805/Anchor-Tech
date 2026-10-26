@@ -1,0 +1,58 @@
+{
+  "$comment": "What the RMM skin relies on in Breeze's web app. scripts/check-breeze.mjs checks a Breeze release against this file plus public/anchor-skin/skin.css and src/worker.js. Update testedWith (and anything the check reports) whenever you confirm the skin on a new release.",
+  "testedWith": "0.124.0",
+  "tokensLeftStock": [
+    "--destructive",
+    "--destructive-foreground",
+    "--success",
+    "--success-foreground",
+    "--info",
+    "--info-foreground"
+  ],
+  "paletteLeftStock": [
+    "amber", "red", "emerald", "green", "yellow", "orange", "rose", "pink",
+    "purple", "violet", "fuchsia", "teal", "cyan", "lime",
+    "gray", "slate", "zinc", "neutral", "stone"
+  ],
+  "hooks": [
+    {
+      "why": "Sidebar: the company name next to the 22px logo is set in Fraunces (skin.css, sidebar rule)",
+      "text": ["u-h-px-22", "w-[22px]"]
+    },
+    {
+      "why": "Sign-in eyebrow: skin.css styles the <p> that opens the login page's first block",
+      "file": "apps/web/src/components/auth/LoginPage.tsx",
+      "pattern": "data-testid=\"login-page\">\\s*<div[^>]*>\\s*<p"
+    },
+    {
+      "why": "Primary sign-in button gets the gold pill style via button.bg-primary",
+      "file": "apps/web/src/components/auth/LoginForm.tsx",
+      "text": "bg-primary"
+    },
+    {
+      "why": "Single-card sign-in pages: the anchor tile and name replace this header (body > div > div.max-w-md > div.text-center)",
+      "file": "apps/web/src/layouts/AuthLayout.astro",
+      "pattern": "<body[^>]*>\\s*<div[^>]*>\\s*<div class=\"[^\"]*\\bmax-w-md\\b[^\"]*\">\\s*<div class=\"text-center\">\\s*<div[^>]*>\\s*<svg[\\s\\S]*?</svg>\\s*</div>\\s*<h1"
+    },
+    {
+      "why": "Two-panel sign-in pages: the left panel is the AuthPanelBranding island",
+      "file": "apps/web/src/layouts/AuthShellBranded.astro",
+      "pattern": "<AuthPanelBranding[^>]*client:"
+    },
+    {
+      "why": "viewer-link.js rewrites the Connect Desktop link (breeze://connect?...&api=...) to the internal address",
+      "file": "apps/web/src/components/remote/ConnectDesktopButton.tsx",
+      "text": "breeze://connect?"
+    },
+    {
+      "why": "viewer-link.js swaps the api= value in the viewer link",
+      "file": "apps/web/src/components/remote/ConnectDesktopButton.tsx",
+      "text": "&api=${encodeURIComponent(apiUrl)}"
+    },
+    {
+      "why": "viewer-link.js catches the link click Breeze uses to open the viewer; if Breeze stops clicking a link, the rewrite stops working",
+      "file": "apps/web/src/components/remote/ConnectDesktopButton.tsx",
+      "pattern": "function tryDeepLink[\\s\\S]{0,200}?createElement\\('a'\\)[\\s\\S]{0,200}?\\.click\\(\\)"
+    }
+  ]
+}
